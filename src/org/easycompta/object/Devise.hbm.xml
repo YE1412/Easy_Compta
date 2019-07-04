@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 18 avr. 2018 22:21:52 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="org.easycompta.object.Devise" table="devise" catalog="easy_compta" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="symbole" type="char">
+            <column name="symbole" length="1" not-null="true" />
+        </property>
+    </class>
+    <query name="findAllDevises">  
+	<![CDATA[SELECT d FROM Devise d ORDER BY d.id]]>  
+	</query>
+</hibernate-mapping>

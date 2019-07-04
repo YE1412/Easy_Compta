@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!-- <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> -->
+<!-- Generated 18 avr. 2018 22:21:52 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="org.easycompta.object.Commande" table="commande" catalog="easy_compta" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="contenuAdditionnel" type="string">
+            <column name="contenu_additionnel" />
+        </property>
+        <property name="idFacture" type="int">
+            <column name="id_facture" not-null="true" />
+        </property>
+        <property name="idTva" type="int">
+            <column name="id_tva" not-null="true" />
+        </property>
+        <property name="priceHt" type="float">
+            <column name="price_ht" precision="12" scale="0" not-null="true" />
+        </property>
+        <property name="priceTt" type="float">
+            <column name="price_tt" precision="12" scale="0" not-null="true" />
+        </property>
+    </class>
+    <query name="findAllOrdersByAsc">  
+	<![CDATA[SELECT c FROM Commande c ORDER BY c.id ASC]]>  
+	</query>
+	<query name="findAllTVA">  
+	<![CDATA[SELECT t FROM Tva t]]>  
+	</query>
+</hibernate-mapping>

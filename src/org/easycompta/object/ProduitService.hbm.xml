@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 18 avr. 2018 22:21:52 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="org.easycompta.object.ProduitService" table="produit_service" catalog="easy_compta" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="nom" type="string">
+            <column name="nom" not-null="true" />
+        </property>
+        <property name="montantHt" type="float">
+            <column name="montant_ht" precision="12" scale="0" not-null="true" />
+        </property>
+        <property name="quantite" type="int">
+            <column name="quantite" not-null="true" />
+        </property>
+    </class>
+    
+    <query name="findAllProduitServicesOrderAsc">  
+	<![CDATA[SELECT ps FROM ProduitService ps ORDER BY ps.nom ASC]]>  
+	</query>
+</hibernate-mapping>

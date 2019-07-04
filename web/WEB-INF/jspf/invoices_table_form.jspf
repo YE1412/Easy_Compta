@@ -1,0 +1,131 @@
+<%-- any content can be specified here e.g.: --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ page pageEncoding="UTF-8" %>
+<c:if test="${add}" > 
+    <form:form action="add" modelAttribute="invoicesForm">
+        <form:hidden path="id" />
+        <div class="table-responsive">
+            <table class="table">
+
+                <!--Table head-->
+                <thead class="mdb-color darken-3">
+                    <tr class="text-white text-center">
+                        <th>#</th>
+                        <th>Langue</th>
+                        <th>Identifiant de la commande</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <!--Table head-->
+
+                <!--Table body-->
+                <tbody>
+                    <tr>
+                        <th scope="row" style="vertical-align:middle;"><form:hidden path="id" />?</th>
+                <spring:bind path="idLangue" >
+                    <td style="vertical-align:middle;">
+                        <div class="${status.error ? 'has-error' : ''} input-group" style="margin-top:1.5em;">
+                            <i class="fas fa-language prefix  grey-text"></i>
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="type">Langue</label>
+                            </div>
+                            <form:select path="idLangue" items="${languagesList}" class="custom-select" />
+                            <form:errors path="idLangue" cssClass="error" />
+                        </div>
+                    </td>
+                </spring:bind>
+                <spring:bind path="idCommande" >
+                    <td style="vertical-align:middle;">
+                        <div class="${status.error ? 'has-error' : ''} input-group" style="margin-top:1.5em;">
+                            <i class="fab fa-linode prefix  grey-text"></i>
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="type">Commande</label>
+                            </div>
+                            <form:select path="idCommande" items="${ordersList}" class="custom-select" />
+                            <form:errors path="idCommande" cssClass="error" />
+                        </div>
+                    </td>
+                </spring:bind>
+                <td style="vertical-align:middle;">
+                    <button class="btn btn-primary" type="submit">Ajouter</button>
+                </td>
+                </tr>
+                </tbody>
+                <!--Table body-->
+            </table>
+            <!--Table-->
+        </div>
+    </form:form>
+</c:if>
+<c:if test="${update}" >
+    <form:form action="update" modelAttribute="invoicesForm">
+        <form:hidden path="id" />
+        <div class="table-responsive">
+            <table class="table">
+
+                <!--Table head-->
+                <thead class="mdb-color darken-3">
+                    <tr class="text-white text-center">
+                        <th>#</th>
+                        <th>Langue</th>
+                        <th>Date</th>
+                        <th>Identifiant de la commande</th>
+                        <!--<th>Prix total TT</th>-->
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <!--Table head-->
+
+                <!--Table body-->
+                <tbody>
+                    <tr>
+                        <th scope="row" style="vertical-align:middle;"><form:hidden path="id" />${paymentsForm.getId()}</th>
+
+                <spring:bind path="idLangue" >
+                    <td style="vertical-align:middle;">
+                        <div class="${status.error ? 'has-error' : ''} input-group" style="margin-top:1.5em;">
+                            <i class="fas fa-language prefix  grey-text"></i>
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="type">Langue</label>
+                            </div>
+                            <form:select path="idLangue" items="${languagesList}" class="custom-select" />
+                            <form:errors path="idLangue" cssClass="error" />
+                        </div>
+                    </td>
+                </spring:bind>
+                <spring:bind path="date" >
+                    <td style="vertical-align:middle;">
+                        <div class="${status.error ? 'has-error' : ''} input-group" style="margin-top:1.5em;">
+                            <i class="fas fa-calendar-alt prefix  grey-text"></i>
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="type">Date</label>
+                            </div>
+                            <form:input path="date"  class="custom-select" type="date" />
+                            <form:errors path="date" cssClass="error" />
+                        </div>
+                    </td>
+                </spring:bind>
+                <spring:bind path="idCommande" >
+                    <td style="vertical-align:middle;">
+                        <div class="${status.error ? 'has-error' : ''} input-group" style="margin-top:1.5em;">
+                            <i class="fab fa-linode prefix  grey-text"></i>
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="type">Commande</label>
+                            </div>
+                            <form:select path="idCommande" items="${ordersList}"  class="form-control md-text" />
+                            <form:errors path="idCommande" cssClass="error" />
+                        </div>
+                    </td>
+                </spring:bind>
+                <td style="vertical-align:middle;">
+                    <button class="btn btn-primary" type="submit">Modifier</button>
+                </td>
+                </tr>
+                </tbody>
+                <!--Table body-->
+            </table>
+            <!--Table-->
+        </div>
+    </form:form>
+</c:if>

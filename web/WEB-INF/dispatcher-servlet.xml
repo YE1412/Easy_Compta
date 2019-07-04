@@ -1,0 +1,234 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!-- was: <?xml version="1.0" encoding="UTF-8"?> -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">  
+
+    <context:component-scan base-package="org.easycompta" />
+    <!-- <tx:annotation-driven/> -->
+    <!-- <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/> -->
+    <bean class = "org.springframework.web.servlet.view.XmlViewResolver">
+      <property name = "location">
+         <value>/WEB-INF/views.xml</value>
+      </property>
+      <property name="order" value="0" />
+   </bean>
+   
+   <bean id="hibernateUtil" class = "org.easycompta.service.hibernate.HibernateUtil">
+   </bean>
+    <!--
+    Most controllers will use the ControllerClassNameHandlerMapping above, but
+    for the index controller we are using ParameterizableViewController, so we must
+    define an explicit mapping for it.
+    -->
+    <!-- <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <props>
+                <prop key="index.htm">indexController</prop>
+            </props>
+        </property>
+    </bean> -->
+
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+          p:prefix="/WEB-INF/jsp/"
+          p:suffix=".jsp" >
+        <property name="order" value="1" />
+    </bean>
+
+    <!--
+    The index controller.
+    -->
+    <!-- <bean name="indexController"
+          class="org.springframework.web.servlet.mvc.ParameterizableViewController"
+          p:viewName="index" /> -->
+    
+    
+    <bean id="userManager" class="org.easycompta.domain.service.SimpleUserManager">
+
+        <property name="users">
+
+            <list>
+
+                <ref bean="user1"/>
+
+                <ref bean="user2"/>
+
+                <ref bean="user3"/>
+
+            </list>
+
+        </property>
+
+    </bean>
+    
+    <!--<bean id="deviseManager" class="org.easycompta.service.dao.SimpleDeviseDAOManager">
+    </bean> -->
+    <bean id="servicesManager" class="org.easycompta.service.dao.SimpleServicesDAOManager">
+    </bean>
+    <bean id="actorsManager" class="org.easycompta.service.dao.SimpleActorsDAOManager">
+    </bean>
+    <bean id="ordersManager" class="org.easycompta.service.dao.SimpleOrdersDAOManager">
+    </bean>
+    <bean id="invoicesManager" class="org.easycompta.service.dao.SimpleInvoicesDAOManager">
+    </bean>
+    <bean id="paymentsManager" class="org.easycompta.service.dao.SimplePaymentsDAOManager">
+    </bean>
+    <bean id="languagesManager" class="org.easycompta.service.dao.SimpleLanguagesDAOManager">
+    </bean>
+    <bean id="tvaManager" class="org.easycompta.service.dao.SimpleTvaDAOManager">
+    </bean>
+    
+    <bean id="registerFormValidator" class="org.easycompta.service.validator.RegisterFormValidator">
+    </bean>
+    <bean id="servicesFormValidator" class="org.easycompta.service.validator.ServicesFormValidator">
+    </bean>
+    <bean id="actorsFormValidator" class="org.easycompta.service.validator.ActorsFormValidator">
+    </bean>
+    <bean id="ordersFormValidator" class="org.easycompta.service.validator.OrdersFormValidator">
+    </bean>
+    <bean id="containsFormValidator" class="org.easycompta.service.validator.ContainsFormValidator">
+    </bean>
+    <bean id="paymentsFormValidator" class="org.easycompta.service.validator.PaymentsFormValidator">
+    </bean>
+    <bean id="composedFormValidator" class="org.easycompta.service.validator.ComposedFormValidator">
+    </bean>
+    <bean id="invoicesFormValidator" class="org.easycompta.service.validator.InvoicesFormValidator">
+    </bean>
+    <bean id="concernedFormValidator" class="org.easycompta.service.validator.ConcernedFormValidator">
+    </bean>
+    
+    <bean id="user1" class="org.easycompta.domain.User">
+        <property name="id" value="100"/>
+        <property name="login" value="aLogin1"/>
+        <property name="firstname" value="aFName1"/>
+        <property name="lastname" value="aLName1"/>
+        <property name="mail" value="aMail1"/>
+        <property name="password" value="aPassword1"/>
+    </bean>        
+
+    <bean id="user2" class="org.easycompta.domain.User">
+        <property name="id" value="50"/>
+        <property name="login" value="aLogin2"/>
+        <property name="firstname" value="aFName2"/>
+        <property name="lastname" value="aLName2"/>
+        <property name="mail" value="aMail2"/>
+        <property name="password" value="aPassword2"/>
+    </bean> 
+
+    <bean id="user3" class="org.easycompta.domain.User">
+        <property name="id" value="30"/>
+        <property name="login" value="aLogin3"/>
+        <property name="firstname" value="aFName3"/>
+        <property name="lastname" value="aLName3"/>
+        <property name="mail" value="aMail3"/>
+        <property name="password" value="aPassword3"/>
+    </bean> 
+
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+            <value>
+                org\messages
+            </value>
+            <value>
+                org\validate
+            </value>
+        </list>
+        </property>
+    </bean>
+    
+    <bean name="/login.htm" class="org.easycompta.controller.LoginController"> 
+        <property name="userManager" ref="userManager"/>
+    </bean>
+    
+    <bean name="/register.htm" class="org.easycompta.controller.RegisterController"> 
+        <property name="userManager" ref="userManager"/>
+        <property name="registerFormValidator" ref="registerFormValidator"/>
+    </bean>
+    
+    <bean name="/home.htm" class="org.easycompta.controller.HomeController"> 
+        <property name="userManager" ref="userManager"/>
+    </bean>
+    
+    <bean name="/services.htm" class="org.easycompta.controller.ServicesController"> 
+        <property name="userManager" ref="userManager"/>
+        <property name="servicesManager" ref="servicesManager"/>
+        <property name="servicesFormValidator" ref="servicesFormValidator"/>    
+        <property name="ordersManager" ref="ordersManager"/>
+    </bean>
+    
+    <bean name="/actors.htm" class="org.easycompta.controller.ActorsController" >
+        <property name="userManager" ref="userManager" />
+        <property name="actorsManager" ref="actorsManager" />
+        <property name="actorsFormValidator" ref="actorsFormValidator"/>
+    </bean>
+    
+    <bean name="/orders.htm" class="org.easycompta.controller.OrdersController" >
+        <property name="userManager" ref="userManager" />
+        <property name="ordersManager" ref="ordersManager" />
+        <property name="ordersFormValidator" ref="ordersFormValidator"/>
+        <property name="servicesManager" ref="servicesManager"/>
+    </bean>
+    
+    <bean name="/invoices.htm" class="org.easycompta.controller.InvoicesController" >
+        <property name="userManager" ref="userManager" />
+        <property name="invoicesManager" ref="invoicesManager" />
+        <property name="invoicesFormValidator" ref="invoicesFormValidator"/>
+        <property name="languagesManager" ref="languagesManager"/>
+        <property name="ordersManager" ref="ordersManager"/>
+        <property name="actorsManager" ref="actorsManager"/>
+    </bean>
+    
+    <bean name="/payments.htm" class="org.easycompta.controller.PaymentsController" >
+        <property name="userManager" ref="userManager" />
+        <property name="paymentsManager" ref="paymentsManager" />
+        <property name="ordersManager" ref="ordersManager" />
+        <property name="paymentsFormValidator" ref="paymentsFormValidator"/>
+    </bean>
+    
+    <bean name="/services_in_order.htm" class="org.easycompta.controller.form.ServicesInOrderFormController" >
+        <property name="userManager" ref="userManager" />
+        <property name="ordersManager" ref="ordersManager" />
+        <property name="servicesManager" ref="servicesManager"/>
+        <property name="containsFormValidator" ref="containsFormValidator"/>
+    </bean>
+    
+    <bean name="/orders_in_payment.htm" class="org.easycompta.controller.form.OrdersInPaymentFormController" >
+        <property name="userManager" ref="userManager" />
+        <property name="ordersManager" ref="ordersManager" />
+        <property name="paymentsManager" ref="paymentsManager"/>
+        <property name="composedFormValidator" ref="composedFormValidator"/>
+    </bean>
+    
+    <bean name="/actors_in_invoice.htm" class="org.easycompta.controller.form.ActorsInInvoiceFormController" >
+        <property name="userManager" ref="userManager" />
+        <property name="actorsManager" ref="actorsManager" />
+        <property name="invoicesManager" ref="invoicesManager"/>
+        <property name="concernedFormValidator" ref="concernedFormValidator"/>
+    </bean>
+    
+    <bean name="/invoice_in_pdf.htm" class="org.easycompta.controller.views.InvoicePdfViewController" >
+        <property name="userManager" ref="userManager" />
+        <property name="servicesManager" ref="servicesManager" />
+        <property name="invoicesManager" ref="invoicesManager"/>
+        <property name="ordersManager" ref="ordersManager"/>
+        <property name="paymentsManager" ref="paymentsManager"/>
+        <property name="actorsManager" ref="actorsManager"/>
+        <property name="languagesManager" ref="languagesManager"/>
+        <property name="tvaManager" ref="tvaManager"/>
+    </bean>
+    
+    <mvc:resources mapping="/resources/**" location="/WEB-INF/Resources/theme1/"  
+	cache-period="31556926"/>
+    <mvc:annotation-driven />
+</beans>

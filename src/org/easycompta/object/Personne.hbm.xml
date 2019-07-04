@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 18 avr. 2018 22:21:52 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="org.easycompta.object.Personne" table="personne" catalog="easy_compta" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="numCommercant" type="string">
+            <column name="num_commercant" length="50" not-null="true" />
+        </property>
+        <property name="nom" type="string">
+            <column name="nom" length="50" not-null="true" />
+        </property>
+        <property name="prenom" type="string">
+            <column name="prenom" length="50" not-null="true" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="50" not-null="true" />
+        </property>
+        <property name="tel" type="string">
+            <column name="tel" length="10" not-null="true" />
+        </property>
+        <property name="numRue" type="string">
+            <column name="num_rue" length="10" not-null="true" />
+        </property>
+        <property name="nomRue" type="string">
+            <column name="nom_rue" not-null="true" />
+        </property>
+        <property name="cp" type="string">
+            <column name="cp" length="5" not-null="true" />
+        </property>
+        <property name="ville" type="string">
+            <column name="ville" not-null="true" />
+        </property>
+        <property name="type" type="int">
+            <column name="type" not-null="true" />
+        </property>
+    </class>
+    <query name="findAllPersonnesOrderAsc">  
+	<![CDATA[SELECT p FROM Personne p ORDER BY p.nom ASC]]>  
+	</query>
+	<query name="findAllSellersOrderAsc">  
+	<![CDATA[SELECT p FROM Personne p WHERE p.type = 1 ORDER BY p.nom ASC]]>  
+	</query>
+	<query name="findAllBuyersOrderAsc">  
+	<![CDATA[SELECT p FROM Personne p WHERE p.type = 0 ORDER BY p.nom ASC]]>  
+	</query>
+</hibernate-mapping>

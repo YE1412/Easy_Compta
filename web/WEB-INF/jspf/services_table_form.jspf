@@ -1,0 +1,132 @@
+<%-- any content can be specified here e.g.: --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ page pageEncoding="UTF-8" %>
+<c:if test="${add}" > 
+    <form:form action="add" modelAttribute="servicesForm">
+        <form:hidden path="id" />
+        <div class="table-responsive">
+            <table class="table">
+
+                <!--Table head-->
+                <thead class="mdb-color darken-3">
+                    <tr class="text-white text-center">
+                        <th>#</th>
+                        <th>Nom</th>
+                        <th>Montant Unitaire HT</th>
+                        <th>Quantite</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <!--Table head-->
+
+                <!--Table body-->
+                <tbody>
+                    <tr>
+                        <th scope="row" style="vertical-align:middle;">?</th>
+                <spring:bind path="nom" >
+                    <td>
+                        <div class="md-form ${status.error ? 'has-error' : ''}"> 
+                            <i class="fab fa-servicestack prefix grey-text"></i>
+                            <!-- <input type="text" id="materialFormRegisterNameEx" class="form-control"> -->
+                            <form:input path="nom" class="form-control" />
+                            <label for="nom">Nom du service*</label>
+                            <form:errors path="nom" cssClass="error" />
+                        </div>
+                    </td>
+                </spring:bind>
+                <spring:bind path="montantHt" >
+                    <td>
+                        <div class="md-form ${status.error ? 'has-error' : ''}"> 
+                            <i class="fas fa-money-bill-alt prefix grey-text"></i>
+                            <!-- <input type="text" id="materialFormRegisterNameEx" class="form-control"> -->
+                            <form:input path="montantHt" class="form-control" type="number" />
+                            <label for="montantHt">Montant du service*</label>
+                            <form:errors path="montantHt" cssClass="error" />
+                        </div>
+                    </td>
+                </spring:bind>
+                <spring:bind path="quantite" >
+                    <td><div class="md-form ${status.error ? 'has-error' : ''}"> 
+                            <i class="fas fa-hand-lizard prefix grey-text"></i>
+                            <!-- <input type="text" id="materialFormRegisterNameEx" class="form-control"> -->
+                            <form:input path="quantite" class="form-control" type="number" />
+                            <label for="quantite">Quantité*</label>
+                            <form:errors path="quantite" cssClass="error" />
+                    </td>
+                </spring:bind>
+                <td style="vertical-align:middle;">
+                    <button class="btn btn-primary" type="submit">Ajouter</button>
+                </td>
+                </tr>
+                </tbody>
+                <!--Table body-->
+            </table>
+            <!--Table-->
+        </div>
+    </form:form>
+</c:if>
+<c:if test="${update}" >
+    <form:form action="update" modelAttribute="servicesForm">
+        <form:hidden path="id" />
+        <div class="table-responsive">
+            <table class="table">
+
+                <!--Table head-->
+                <thead class="mdb-color darken-3">
+                    <tr class="text-white text-center">
+                        <th>#</th>
+                        <th>Nom</th>
+                        <th>Montant Unitaire HT</th>
+                        <th>Quantite</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <!--Table head-->
+
+                <!--Table body-->
+                <tbody>
+                    <tr>
+                        <th scope="row" style="vertical-align:middle;">${servicesForm.getId()}</th>
+                <spring:bind path="nom" >
+                    <td>
+                        <div class="md-form ${status.error ? 'has-error' : ''}"> 
+                            <i class="fab fa-servicestack prefix grey-text"></i>
+                            <!-- <input type="text" id="materialFormRegisterNameEx" class="form-control"> -->
+                            <form:input path="nom" class="form-control" />
+                            <label for="nom">Nom du service*</label>
+                            <form:errors path="nom" cssClass="error" />
+                        </div>
+                    </td>
+                </spring:bind>
+                <spring:bind path="montantHt" >
+                    <td>
+                        <div class="md-form ${status.error ? 'has-error' : ''}"> 
+                            <i class="fas fa-money-bill-alt prefix grey-text"></i>
+                            <!-- <input type="text" id="materialFormRegisterNameEx" class="form-control"> -->
+                            <form:input path="montantHt" class="form-control" type="number" />
+                            <label for="montantHt">Montant du service*</label>
+                            <form:errors path="montantHt" cssClass="error" />
+                        </div>
+                    </td>
+                </spring:bind>
+                <spring:bind path="quantite" >
+                    <td><div class="md-form ${status.error ? 'has-error' : ''}"> 
+                            <i class="fas fa-hand-lizard prefix grey-text"></i>
+                            <!-- <input type="text" id="materialFormRegisterNameEx" class="form-control"> -->
+                            <form:input path="quantite" class="form-control" type="number" />
+                            <label for="quantite">Quantité*</label>
+                            <form:errors path="quantite" cssClass="error" />
+                    </td>
+                </spring:bind>
+                <td style="vertical-align:middle;">
+                    <button class="btn btn-warning" type="submit">Mettre à jour</button>  
+                </td>
+                </tr>
+                </tbody>
+                <!--Table body-->
+            </table>
+            <!--Table-->
+        </div>
+    </form:form>
+</c:if>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 18 avr. 2018 22:21:52 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="org.easycompta.object.Facture" table="facture" catalog="easy_compta" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="idLangue" type="int">
+            <column name="id_langue" not-null="true" />
+        </property>
+        <property name="date" type="timestamp">
+            <column name="date" length="19" not-null="true" />
+        </property>
+    </class>
+    <query name="findAllInvoicesOrderDateDesc">  
+	<![CDATA[SELECT f FROM Facture f ORDER BY f.date DESC]]>  
+	</query>
+</hibernate-mapping>
