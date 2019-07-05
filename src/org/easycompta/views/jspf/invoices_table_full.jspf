@@ -8,13 +8,13 @@
     <thead class="mdb-color darken-3">
         <tr class="text-white text-center">
             <th>#</th>
-            <th><spring:message code="invoices.tableHead.language" /></th>
-            <th><spring:message code="invoices.tableHead.date" /></th>
-            <th><spring:message code="invoices.tableHead.orderId" /></th>
-            <th><spring:message code="invoices.tableHead.tt_price" /></th>
-            <th><spring:message code="invoices.tableHead.seller" /></th>
-            <th><spring:message code="invoices.tableHead.buyer" /></th>
-            <th><spring:message code="services.tableHead.actions" /></th>
+            <th>Langue</th>
+            <th>Date</th>
+            <th>Identifiant de la commande</th>
+            <th>Prix total TT</th>
+            <th>Vendeur</th>
+            <th>Client</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <!--Table head-->
@@ -44,13 +44,13 @@
                 <td class="text-center">
                     <div class="btn-group" role="group" aria-label="Basic example">
                     <a href="<c:url value="/invoices/addForm" />">
-                        <button type="button" class="btn btn-primary btn-rounded btn-sm my-0"><spring:message code="services.tableHead.actions.add" /></button>
+                        <button type="button" class="btn btn-primary btn-rounded btn-sm my-0">Ajouter</button>
                     </a>
                     <a href="<c:url value="/invoices/updateForm/${invoice.getId()}" />">
-                        <button type="button" class="btn btn-warning btn-rounded btn-sm my-0"><spring:message code="services.tableHead.actions.update" /></button>
+                        <button type="button" class="btn btn-warning btn-rounded btn-sm my-0">Modifier</button>
                     </a>
                     <a href="<c:url value="/invoices/delete/${invoice.getId()}" />">
-                        <button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><spring:message code="services.tableHead.actions.delete" /></button>
+                        <button type="button" class="btn btn-danger btn-rounded btn-sm my-0">Supprimer</button>
                     </a>
                     </div>
                 </td>

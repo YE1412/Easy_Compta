@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -32,6 +33,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -46,6 +49,7 @@ public class InvoicesController {
     private InvoicesFormValidator invoicesFormValidator;
     private ActorsDAOManager actorsManager;
     private ResourceBundle messages, validate;
+    SessionLocaleResolver localResolver;
     Map<String, String> ordersListForSelect = new LinkedHashMap<>();
     Map<String, String> languagesListForSelect = new LinkedHashMap<>();
     Map<Integer, String> languagesListForDisplay = new LinkedHashMap<>();

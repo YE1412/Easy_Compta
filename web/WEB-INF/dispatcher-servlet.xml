@@ -44,7 +44,35 @@
           p:suffix=".jsp" >
         <property name="order" value="1" />
     </bean>
-
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+            <value>
+                messages
+            </value>
+            <value>
+                validate
+            </value>
+        </list>
+        </property>
+    </bean> 
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" >
+    </bean>
+    <bean id="localeChangeInterceptor"
+      class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+    	<property name="paramName" value="language"/>
+	</bean>
+	<bean id="urlMapping"
+      class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+	    <property name="interceptors">
+	        <list>
+	            <ref bean="localeChangeInterceptor"/>
+	        </list>
+	    </property>
+	    <property name="mappings">
+	        <value>/**/*=/invoices.htm</value>
+	    </property>
+	</bean>
     <!--
     The index controller.
     -->
@@ -134,19 +162,6 @@
         <property name="password" value="aPassword3"/>
     </bean> 
 
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-        <property name="basenames">
-            <list>
-            <value>
-                messages
-            </value>
-            <value>
-                validate
-            </value>
-        </list>
-        </property>
-    </bean>
-    
     <bean name="/login.htm" class="org.easycompta.controller.LoginController"> 
         <property name="userManager" ref="userManager"/>
     </bean>

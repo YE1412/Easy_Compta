@@ -23,5 +23,6 @@
     p:password="${jdbc.password}" /-->
     <!-- <bean name="loginService" class="org.easycompta.LoginService" /> -->
     <!-- ADD PERSISTENCE SUPPORT HERE (jpa, hibernate, etc) -->
-    
+	<!-- <bean id="config" class="org.easycompta.AppConfiguration">
+	</bean> -->
 </beans>

@@ -8,12 +8,9 @@
     <thead class="mdb-color darken-3">
         <tr class="text-white text-center">
             <th>#</th>
-            <th><spring:message code="invoices.tableHead.language" /></th>
-            <th><spring:message code="invoices.tableHead.date" /></th>
-            <th><spring:message code="invoices.tableHead.orderId" /></th>
-            <th><spring:message code="invoices.tableHead.tt_price" /></th>
-            <th><spring:message code="invoices.tableHead.seller" /></th>
-            <th><spring:message code="invoices.tableHead.buyer" /></th>
+            <th><spring:message code="services.tableHead.name" /></th>
+            <th><spring:message code="services.tableHead.amount" /></th>
+            <th><spring:message code="services.tableHead.quantity" /></th>
             <th><spring:message code="services.tableHead.actions" /></th>
         </tr>
     </thead>
@@ -22,9 +19,9 @@
     <!--Table body-->
     <tbody>
         <tr>
-            <td class="text-center" colspan="7"><spring:message code="invoices.table.empty" /></td>
+            <td class="text-center" colspan="4"><spring:message code="services.table.empty" /></td>
             <td class="text-center">
-                <a href="<c:url value="/invoices/addForm" />">
+                <a href="<c:url value="/services/addForm" />">
                     <button type="button" class="btn btn-primary btn-rounded btn-sm my-0"><spring:message code="services.tableHead.actions.add" /></button>
                 </a>
             </td>
@@ -34,4 +31,3 @@
 </table>
 <!--Table-->
 </div>
-

@@ -1,0 +1,70 @@
+<%-- any content can be specified here e.g.: --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page pageEncoding="ISO-8859-1" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<div class="table-responsive">
+<table class="table">
+
+    <!--Table head-->
+    <thead class="mdb-color darken-3">
+        <tr class="text-white text-center">
+            <th>#</th>
+            <th>Etat</th>
+            <th>Reste à payer</th>
+            <th>Identifiant de la commande</th>
+            <th>Prix total TT</th>
+            <!--<th>Type</th>-->
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <!--Table head-->
+    
+    <!--Table body-->
+    <tbody>
+        <c:forEach items="${payments}" var="payment" >
+            <tr>
+                <td class="text-center" scope="row">${payment.getId()}</td>
+                <td class="text-center" >
+                    <c:if test="${payment.isEtat()}" >
+                        Payé
+                    </c:if>
+                    <c:if test="${!payment.isEtat()}" >
+                        Impayé
+                    </c:if>
+                </td>
+                <td class="text-center" >${String.format("%.2f", payment.getReste())} <spring:message code="devise_code"/></td>
+                <td class="text-center" >
+                     <c:forEach items="${ordersList.get(payment.getId())}" var="id" >
+                        ${id} , 
+                    </c:forEach>
+                    <a href="<c:url value="/orders_in_payment/updateForm/${payment.getId()}" />">
+                        <button type="button" class="btn btn-warning btn-rounded btn-sm my-0">Modifier</button>
+                    </a>
+                </td>
+                <c:set var = "priceTt" value = "0.0" scope = "session" />
+                <td class="text-center" ><c:forEach items="${ordersList.get(payment.getId())}" var="id" >
+                       <c:set var = "priceTt" value = "${priceTt + pricesList.get(id)}" scope = "session" />
+                    </c:forEach>
+                    ${String.format("%.2f", Float.valueOf(priceTt))} <spring:message code="devise_code"/>
+                </td>
+                <td class="text-center">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                    <a href="<c:url value="/payments/addForm" />">
+                        <button type="button" class="btn btn-primary btn-rounded btn-sm my-0">Ajouter</button>
+                    </a>
+                    <a href="<c:url value="/payments/updateForm/${payment.getId()}" />">
+                        <button type="button" class="btn btn-warning btn-rounded btn-sm my-0">Modifier</button>
+                    </a>
+                    <a href="<c:url value="/payments/delete/${payment.getId()}" />">
+                        <button type="button" class="btn btn-danger btn-rounded btn-sm my-0">Supprimer</button>
+                    </a>
+                    </div>
+                </td>
+            </tr>
+        </c:forEach>
+    </tbody>
+    <!--Table body-->
+</table>
+<!--Table-->
+</div>
+

@@ -12,9 +12,9 @@
                 <thead class="mdb-color darken-3">
                     <tr class="text-white text-center">
                         <th>#</th>
-                        <th><spring:message code="invoices.tableHead.language" /></th>
-                        <th><spring:message code="invoices.tableHead.orderId" /></th>
-                        <th><spring:message code="services.tableHead.actions" /></th>
+                        <th>Langue</th>
+                        <th>Identifiant de la commande</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <!--Table head-->
@@ -28,7 +28,7 @@
                         <div class="${status.error ? 'has-error' : ''} input-group" style="margin-top:1.5em;">
                             <i class="fas fa-language prefix  grey-text"></i>
                             <div class="input-group-prepend">
-                                <label class="input-group-text" for="type"><spring:message code="invoices.form.language" /></label>
+                                <label class="input-group-text" for="type">Langue</label>
                             </div>
                             <form:select path="idLangue" items="${languagesList}" class="custom-select" />
                             <form:errors path="idLangue" cssClass="error" />
@@ -40,7 +40,7 @@
                         <div class="${status.error ? 'has-error' : ''} input-group" style="margin-top:1.5em;">
                             <i class="fab fa-linode prefix  grey-text"></i>
                             <div class="input-group-prepend">
-                                <label class="input-group-text" for="type"><spring:message code="invoices.form.order" /></label>
+                                <label class="input-group-text" for="type">Commande</label>
                             </div>
                             <form:select path="idCommande" items="${ordersList}" class="custom-select" />
                             <form:errors path="idCommande" cssClass="error" />
@@ -48,7 +48,7 @@
                     </td>
                 </spring:bind>
                 <td style="vertical-align:middle;">
-                    <button class="btn btn-primary" type="submit"><spring:message code="services.tableHead.actions.add" /></button>
+                    <button class="btn btn-primary" type="submit">Ajouter</button>
                 </td>
                 </tr>
                 </tbody>

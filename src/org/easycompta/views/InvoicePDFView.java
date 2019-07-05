@@ -74,7 +74,8 @@ public class InvoicePDFView extends AbstractPdfView{
         this.idLangue = idLangue;
     }
     
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     protected void buildPdfDocument(Map<String, Object> map, Document dcmnt, PdfWriter writer, HttpServletRequest hsr, HttpServletResponse hsr1) throws Exception {
         hsr1.setHeader("Content-Disposition", "attachment; filename\"pdf_file.pdf\"");
         Map<String,Object> model = (Map<String,Object>) map.get("model");
@@ -87,7 +88,7 @@ public class InvoicePDFView extends AbstractPdfView{
         idLangue = invoice.getIdLangue();
         try
         {
-            getFrenchDoc(dcmnt);
+            getDoc(dcmnt, idLangue);
         }catch(DocumentException e){
             e.printStackTrace();
         }
@@ -95,16 +96,21 @@ public class InvoicePDFView extends AbstractPdfView{
         
     }
     
-    private void getFrenchDoc(Document dcmnt) throws DocumentException
+    private void getDoc(Document dcmnt, int idLangue) throws DocumentException
     {
-        SimpleDateFormat sdfr = new SimpleDateFormat("dd.MM.yyyy");
-        new DecimalFormat("#.##");
+    	new DecimalFormat("#.##");
         Paragraph head = new Paragraph();
         Paragraph head_company = new Paragraph();
         Paragraph head_title = new Paragraph();
         Paragraph content = new Paragraph();
         PdfPTable table=new PdfPTable(7);
-        
+        SimpleDateFormat sdfr = null;
+        if (idLangue == 0) {
+        	sdfr = new SimpleDateFormat("dd.MM.yyyy");
+        }
+        else {
+        	return;
+        }
         Paragraph p=new Paragraph("Adresse de facturation :", headingTableFont);
         Paragraph p2=new Paragraph(buyer.getPrenom()+" "+buyer.getNom(), contentTableFont);
         Paragraph p3=new Paragraph(buyer.getNumRue()+ " " +buyer.getNomRue(), contentTableFont);
@@ -112,7 +118,7 @@ public class InvoicePDFView extends AbstractPdfView{
         addEmptyLine(p4, 1);
         addEmptyLine(p4, 1);
         addEmptyLine(p4, 1);
-        Paragraph p5=new Paragraph("Contenu supplÃ©mentaire :", heading_smallTableFont);
+        Paragraph p5=new Paragraph("Contenu supplémentaire :", heading_smallTableFont);
         p5.setAlignment(Element.ALIGN_CENTER);
         Paragraph p6=new Paragraph(order.getContenuAdditionnel(), contentTableFont);
         p6.setIndentationLeft(5);

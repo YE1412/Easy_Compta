@@ -1,0 +1,134 @@
+<%-- any content can be specified here e.g.: --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ page pageEncoding="UTF-8" %>
+<c:if test="${add}" > 
+    <form:form action="add" modelAttribute="ordersForm">
+        <form:hidden path="id" />
+        <div class="table-responsive">
+            <table class="table">
+
+                <!--Table head-->
+                <thead class="mdb-color darken-3">
+                    <tr class="text-white text-center">
+                        <th>#</th>
+                        <th>Contenu additionnel</th>
+                        <th>TVA</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <!--Table head-->
+
+                <!--Table body-->
+                <tbody>
+                    <tr>
+                        <th scope="row" style="vertical-align:middle;">?</th>
+                <spring:bind path="contenuAdditionnel" >
+                    <td>
+                        <div class="md-form ${status.error ? 'has-error' : ''}"> 
+                            <i class="fas fa-cart-plus prefix grey-text"></i>
+                            <!-- <input type="text" id="materialFormRegisterNameEx" class="form-control"> -->
+                            <form:textarea path="contenuAdditionnel" class="form-control md-textarea"  rows="3" />
+                            <label for="contenuAdditionnel">Contenu additionnel</label>
+                            <form:errors path="contenuAdditionnel" cssClass="error" />
+                        </div>
+                    </td>
+                </spring:bind>
+                <%--<spring:bind path="idProduitService" >
+                    <td><div class="md-form ${status.error ? 'has-error' : ''}"> 
+                            <i class="fa fa-user prefix grey-text"></i>
+                            <!-- <input type="text" id="materialFormRegisterNameEx" class="form-control"> -->
+                            <form:select multiple="true" path="idProduitService" class="form-control" type="number" />
+                            <label for="idProduitService">Identifiant des services*</label>
+                            <form:errors path="idProduitService" cssClass="error" />
+                    </td>
+                </spring:bind>--%>
+                <spring:bind path="idTva" >
+                    <td style="vertical-align:middle;">
+                    <div class="${status.error ? 'has-error' : ''} input-group" style="margin-top:1.5em;">
+                        <i class="fas fa-tags prefix  grey-text"></i>
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="type">TVA</label>
+                        </div>
+                        <form:select path="idTva" items="${tvaList}" class="custom-select" />
+                        <form:errors path="idTva" cssClass="error" />
+                    </div>
+                    </td>
+                </spring:bind>
+                <td style="vertical-align:middle;" class="text-center">
+                    <button class="btn btn-primary" type="submit">Ajouter</button>
+                </td>
+                </tr>
+                </tbody>
+                <!--Table body-->
+            </table>
+            <!--Table-->
+        </div>
+    </form:form>
+</c:if>
+<c:if test="${update}" >
+    <form:form action="update" modelAttribute="ordersForm">
+        <form:hidden path="id" />
+        <div class="table-responsive">
+            <table class="table">
+
+                <!--Table head-->
+                <thead class="mdb-color darken-3">
+                    <tr class="text-white text-center">
+                        <th>#</th>
+                        <th>Contenu additionnel</th>
+                        <!--<th>Identifiant des services</th>-->
+                        <th>TVA</th>
+                        <!--<th>Prix total HT</th>-->
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <!--Table head-->
+
+                <!--Table body-->
+                <tbody>
+                    <tr>
+                        <th scope="row" style="vertical-align:middle;">?</th>
+                    <spring:bind path="contenuAdditionnel" >
+                    <td>
+                        <div class="md-form ${status.error ? 'has-error' : ''}"> 
+                            <i class="fas fa-cart-plus prefix grey-text"></i>
+                            <!-- <input type="text" id="materialFormRegisterNameEx" class="form-control"> -->
+                            <form:textarea path="contenuAdditionnel" class="form-control md-textarea"  rows="3" />
+                            <label for="contenuAdditionnel">Contenu additionnel</label>
+                            <form:errors path="contenuAdditionnel" cssClass="error" />
+                        </div>
+                    </td>
+                </spring:bind>
+                <%--<spring:bind path="idProduitService" >
+                    <td><div class="md-form ${status.error ? 'has-error' : ''}"> 
+                            <i class="fa fa-user prefix grey-text"></i>
+                            <!-- <input type="text" id="materialFormRegisterNameEx" class="form-control"> -->
+                            <form:select multiple="multiple" path="idProduitService" class="form-control" type="number" />
+                            <label for="idProduitService">Identifiant des services*</label>
+                            <form:errors path="idProduitService" cssClass="error" />
+                    </td>
+                </spring:bind>--%>
+                <spring:bind path="idTva" >
+                    <td style="vertical-align:middle;">
+                    <div class="${status.error ? 'has-error' : ''} input-group" style="margin-top:1.5em;">
+                        <i class="fas fa-tags prefix  grey-text"></i>
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="type">TVA</label>
+                        </div>
+                        <form:select path="idTva" items="${tvaList}" class="custom-select" />
+                        <form:errors path="idTva" cssClass="error" />
+                    </div>
+                    </td>
+                </spring:bind>
+                <td style="vertical-align:middle;">
+                    <button class="btn btn-primary" type="submit">Modifier</button>
+                </td>
+                </tr>
+                </tbody>
+                <!--Table body-->
+            </table>
+            <!--Table-->
+        </div>
+    </form:form>
+</c:if>

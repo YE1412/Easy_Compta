@@ -11,7 +11,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,6 +38,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 /**
@@ -55,7 +58,11 @@ public class InvoicePdfViewController {
     Map<Integer, Integer> ordersListForDisplay = new LinkedHashMap<>();
     Map<Integer, Personne> sellersListForDisplay = new LinkedHashMap<>();
     Map<Integer, Personne> buyersListForDisplay = new LinkedHashMap<>();
-    
+    private ResourceBundle messages, validate;
+    public InvoicePdfViewController(){
+    	messages = ResourceBundle.getBundle("messages");
+    	validate = ResourceBundle.getBundle("validate");
+    }
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -167,11 +174,13 @@ public class InvoicePdfViewController {
     
     @RequestMapping(value="/{id}/{filename}", method=RequestMethod.GET)
     protected ModelAndView handleRequestInternal(@PathVariable("id") int id,
-            HttpServletRequest hsr, HttpServletResponse hsr1) throws Exception {
+            HttpServletRequest hsr, HttpServletResponse hsr1, final RedirectAttributes redirectAttributes, Model mainModel) throws Exception {
         Map<String,Object> model = new HashMap<>();
         List<ProduitService> servList=new ArrayList<>();
         List<Integer> servIdList=null;
+        SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
         Commande order=invoicesManager.getOrderByInvoiceId(id);
+        int idSeller = 0, idBuyer = 0;
         servIdList = ordersManager.getContains(order.getId());
         for (int ids:servIdList){
             servList.add(servicesManager.getServiceById(ids));
@@ -179,9 +188,34 @@ public class InvoicePdfViewController {
         model.put("services", servList);
         model.put("order", order);
         model.put("invoice", invoicesManager.getInvoiceById(id));
-        model.put("seller", actorsManager.getActorById(invoicesManager.getSellerByInvoiceId(id)));
-        model.put("buyer", actorsManager.getActorById(invoicesManager.getBuyerByInvoiceId(id)));
+        try {
+        	idSeller = invoicesManager.getSellerByInvoiceId(id);
+        	idBuyer = invoicesManager.getBuyerByInvoiceId(id);
+        } catch (Exception e) {
+        	idSeller = 0;
+        	idBuyer = 0;
+        }
+        model.put("seller", actorsManager.getActorById(idSeller));
+        model.put("buyer", actorsManager.getActorById(idBuyer));
         model.put("tva", tvaManager.getTvaById(order.getIdTva()));
+        if (idBuyer == 0 || idSeller == 0) {
+        	Date now = new Date();
+            mainModel.addAttribute("now", now.toString());
+            mainModel.addAttribute("invoices", invoicesManager.getAllInvoices());
+            setPricesListForDisplay();
+            setOrdersListForDisplay();
+            setLanguagesListForDisplay();
+            setBuyersListForDisplay();
+            setSellersListForDisplay();
+            mainModel.addAttribute("pricesList", pricesListForDisplay);
+            mainModel.addAttribute("ordersList", ordersListForDisplay);
+            mainModel.addAttribute("languagesList", languagesListForDisplay);
+            mainModel.addAttribute("sellersList", sellersListForDisplay);
+            mainModel.addAttribute("buyersList", buyersListForDisplay);
+            mainModel.addAttribute("msg", validate.getString("Error.invoicesPdfExport.noActor"));
+            mainModel.addAttribute("success", false);
+        	return new ModelAndView("invoices", "model", mainModel);
+        }
         return new ModelAndView("invoiceSummary", "model", model);
     }
 

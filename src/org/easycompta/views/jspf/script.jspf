@@ -1,0 +1,6 @@
+<%-- any content can be specified here e.g.: --%>
+<%@ page pageEncoding="UTF-8" %>
+<script src="<c:url value="/resources/mdb/js/jquery-3.2.1.min.js" />" ></script>
+<script src="<c:url value="/resources/mdb/js/popper.min.js" />" ></script>
+<script src="<c:url value="/resources/mdb/js/bootstrap.min.js" />"></script>
+<script src="<c:url value="/resources/mdb/js/mdb.min.js" />" ></script>
