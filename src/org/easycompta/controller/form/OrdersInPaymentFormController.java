@@ -43,8 +43,8 @@ public class OrdersInPaymentFormController {
     Map<String,String> ordersListForSelect = new LinkedHashMap<>();
     private ResourceBundle validate, messages;
     private OrdersInPaymentFormController() {
-    	messages = ResourceBundle.getBundle("org/messages", Locale.getDefault());
-    	validate = ResourceBundle.getBundle("org/validate", Locale.getDefault());
+    	messages = ResourceBundle.getBundle("messages", Locale.getDefault());
+    	validate = ResourceBundle.getBundle("validate", Locale.getDefault());
     }
     private void setOrdersListForSelect(){
         List<Commande> ordersList = ordersManager.getAllOrders();

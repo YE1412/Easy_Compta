@@ -43,8 +43,8 @@ public class ServicesInOrderFormController {
    Map<String,String> servicesListForSelect = new LinkedHashMap<>();
    private ResourceBundle messages, validate;
    private ServicesInOrderFormController() {
-	   	messages = ResourceBundle.getBundle("org/messages", Locale.getDefault());
-   		validate = ResourceBundle.getBundle("org/validate", Locale.getDefault());
+	   	messages = ResourceBundle.getBundle("messages", Locale.getDefault());
+   		validate = ResourceBundle.getBundle("validate", Locale.getDefault());
    }
 	public void setContainsFormValidator(ContainsFormValidator containsFormValidator) {
 	    this.containsFormValidator = containsFormValidator;

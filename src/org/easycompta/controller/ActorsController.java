@@ -7,7 +7,6 @@ package org.easycompta.controller;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -39,8 +38,8 @@ public class ActorsController {
     protected final Log logger = LogFactory.getLog(getClass());
     private ResourceBundle messages, validate;
     public ActorsController() {
-    	messages = ResourceBundle.getBundle("org/messages", Locale.getDefault());
-    	validate = ResourceBundle.getBundle("org/validate", Locale.getDefault());
+    	messages = ResourceBundle.getBundle("messages");
+    	validate = ResourceBundle.getBundle("validate");
     }
     public void setUserManager(UserManager userManager) {
     	

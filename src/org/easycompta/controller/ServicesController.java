@@ -7,7 +7,6 @@ package org.easycompta.controller;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.apache.commons.logging.Log;
@@ -43,7 +42,7 @@ public class ServicesController {
     ServicesFormValidator servicesFormValidator;
     private ResourceBundle validate;
     public ServicesController() {
-    	validate = ResourceBundle.getBundle("org/validate", Locale.getDefault());
+    	validate = ResourceBundle.getBundle("validate");
     }
     public void setOrdersManager(OrdersDAOManager ordersManager) {
         this.ordersManager = ordersManager;

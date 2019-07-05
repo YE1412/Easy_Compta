@@ -6,7 +6,6 @@
 package org.easycompta.controller;
 
 import java.util.Date;
-import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -38,7 +37,7 @@ public class RegisterController {
     RegisterFormValidator registerFormValidator;
     private ResourceBundle validate;
     public RegisterController() {
-    	validate = ResourceBundle.getBundle("org/validate", Locale.getDefault());
+    	validate = ResourceBundle.getBundle("validate");
     }
 //    DeviseDAOManager deviseManager;
 

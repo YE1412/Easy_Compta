@@ -23,8 +23,8 @@
       <property name="order" value="0" />
    </bean>
    
-   <bean id="hibernateUtil" class = "org.easycompta.service.hibernate.HibernateUtil">
-   </bean>
+   <!-- <bean id="hibernateUtil" class = "org.easycompta.service.hibernate.HibernateUtil">
+   </bean> -->
     <!--
     Most controllers will use the ControllerClassNameHandlerMapping above, but
     for the index controller we are using ParameterizableViewController, so we must
@@ -138,10 +138,10 @@
         <property name="basenames">
             <list>
             <value>
-                org\messages
+                messages
             </value>
             <value>
-                org\validate
+                validate
             </value>
         </list>
         </property>

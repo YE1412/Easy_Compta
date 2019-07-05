@@ -42,8 +42,8 @@ public class ActorsInInvoiceFormController {
     Map<String, String> buyersListForSelect = new LinkedHashMap<>();
     private ResourceBundle messages, validate;
     private ActorsInInvoiceFormController() {
-    	messages = ResourceBundle.getBundle("org/messages", Locale.getDefault());
-    	validate = ResourceBundle.getBundle("org/validate", Locale.getDefault());
+    	messages = ResourceBundle.getBundle("messages", Locale.US);
+    	validate = ResourceBundle.getBundle("validate", Locale.getDefault());
     }
     //Set a form validator
     @InitBinder

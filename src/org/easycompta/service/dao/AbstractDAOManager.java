@@ -15,7 +15,7 @@ public abstract class AbstractDAOManager {
 	protected Session session = null;
 	SessionFactory factory =  null;
 	public AbstractDAOManager() {
-    	StandardServiceRegistry ssr=new StandardServiceRegistryBuilder().configure("org/hibernate.cfg.xml").build();  
+    	StandardServiceRegistry ssr=new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();  
         Metadata meta=new MetadataSources(ssr).getMetadataBuilder().build();  
           
         factory=meta.getSessionFactoryBuilder().build();  

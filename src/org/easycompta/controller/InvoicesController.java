@@ -9,7 +9,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -57,8 +56,8 @@ public class InvoicesController {
     Map<Integer, Personne> buyersListForDisplay = new LinkedHashMap<>();
 //    Map<String, String> buyersListForSelect = new LinkedHashMap<>();
     public InvoicesController() {
-    	messages = ResourceBundle.getBundle("org/messages", Locale.getDefault());
-    	validate = ResourceBundle.getBundle("org/validate", Locale.getDefault());
+    	messages = ResourceBundle.getBundle("messages");
+    	validate = ResourceBundle.getBundle("validate");
     }
     public void setActorsManager(ActorsDAOManager actorsManager) {
         this.actorsManager = actorsManager;

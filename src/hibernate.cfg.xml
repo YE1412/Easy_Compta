@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <!--
 DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
 
@@ -39,18 +39,28 @@ made subject to such option by the copyright holder.
 
 Contributor(s):
 -->
-<hibernate-reverse-engineering>
-  <schema-selection match-catalog="easy_compta"/>
-  <table-filter match-name="langue"/>
-  <table-filter match-name="devise"/>
-  <table-filter match-name="paiement"/>
-  <table-filter match-name="concerner"/>
-  <table-filter match-name="composer"/>
-  <table-filter match-name="personne"/>
-  <table-filter match-name="commande"/>
-  <table-filter match-name="produit_service"/>
-  <table-filter match-name="paiment"/>
-  <table-filter match-name="comporter"/>
-  <table-filter match-name="facture"/>
-  <table-filter match-name="tva"/>
-</hibernate-reverse-engineering>
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.query.factory_class">org.hibernate.hql.internal.ast.ASTQueryTranslatorFactory</property>
+    <property name="hibernate.current_session_context_class">thread</property>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+    <property name="hibernate.show_sql">true</property>
+    <property name="hibernate.hbm2ddl.auto">create</property>
+    <property name="hibernate.hbm2ddl.import_files">import.sql</property>
+    <!-- <property name="hibernate.hbm2ddl.import_files_sql_extractor">org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor</property> -->
+    <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+    <property name="hibernate.connection.username">root</property>
+    <property name="hibernate.connection.url">jdbc:mysql://170.17.0.2:3306/easy_compta?serverTimezone=UTC</property>
+    <mapping resource="org/easycompta/object/Personne.hbm.xml"/>
+    <mapping resource="org/easycompta/object/ProduitService.hbm.xml"/>
+    <mapping resource="org/easycompta/object/Commande.hbm.xml"/>
+    <mapping resource="org/easycompta/object/Tva.hbm.xml"/>
+    <mapping resource="org/easycompta/object/Paiement.hbm.xml"/>
+    <mapping resource="org/easycompta/object/Facture.hbm.xml"/>
+    <mapping resource="org/easycompta/object/Comporter.hbm.xml"/>
+    <mapping resource="org/easycompta/object/Concerner.hbm.xml"/>
+    <mapping resource="org/easycompta/object/Composer.hbm.xml"/>
+    <mapping resource="org/easycompta/object/Devise.hbm.xml"/>
+    <mapping resource="org/easycompta/object/Langue.hbm.xml"/>
+  </session-factory>
+</hibernate-configuration>

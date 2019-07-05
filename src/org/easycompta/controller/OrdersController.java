@@ -8,7 +8,6 @@ package org.easycompta.controller;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -44,8 +43,8 @@ public class OrdersController {
    private ResourceBundle validate, messages;
     public void setServicesManager(ServicesDAOManager servicesManager) {
         this.servicesManager = servicesManager;
-    	validate = ResourceBundle.getBundle("org/validate", Locale.getDefault());
-    	messages = ResourceBundle.getBundle("org/messages", Locale.getDefault());
+    	validate = ResourceBundle.getBundle("validate");
+    	messages = ResourceBundle.getBundle("messages");
     }
    
     public void setOrdersFormValidator(OrdersFormValidator ordersFormValidator) {
