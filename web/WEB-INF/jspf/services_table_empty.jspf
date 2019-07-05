@@ -8,10 +8,10 @@
     <thead class="mdb-color darken-3">
         <tr class="text-white text-center">
             <th>#</th>
-            <th>Nom</th>
-            <th>Montant Unitaire HT</th>
-            <th>Quantite</th>
-            <th>Actions</th>
+            <th><spring:message code="services.tableHead.name" /></th>
+            <th><spring:message code="services.tableHead.amount" /></th>
+            <th><spring:message code="services.tableHead.quantity" /></th>
+            <th><spring:message code="services.tableHead.actions" /></th>
         </tr>
     </thead>
     <!--Table head-->
@@ -19,10 +19,10 @@
     <!--Table body-->
     <tbody>
         <tr>
-            <td class="text-center" colspan="4">Aucun Service.</td>
+            <td class="text-center" colspan="4"><spring:message code="services.table.empty" /></td>
             <td class="text-center">
                 <a href="<c:url value="/services/addForm" />">
-                    <button type="button" class="btn btn-primary btn-rounded btn-sm my-0">Ajouter</button>
+                    <button type="button" class="btn btn-primary btn-rounded btn-sm my-0"><spring:message code="services.tableHead.actions.add" /></button>
                 </a>
             </td>
         </tr>

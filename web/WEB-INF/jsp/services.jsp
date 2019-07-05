@@ -4,12 +4,13 @@
     Author     : Yannick
 --%>
 <%@ include file="/WEB-INF/jspf/include.jspf" %> 
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <%@ include file="/WEB-INF/jspf/style.jspf" %>
-        <title><fmt:message key="services.title" /></title>
+        <title><spring:message code="services.title" /></title>
     </head>
     <body>
         <%@include file="/WEB-INF/jspf/header_in.jspf" %>

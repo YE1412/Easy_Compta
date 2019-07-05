@@ -12,10 +12,10 @@
                 <thead class="mdb-color darken-3">
                     <tr class="text-white text-center">
                         <th>#</th>
-                        <th>Nom</th>
-                        <th>Montant Unitaire HT</th>
-                        <th>Quantite</th>
-                        <th>Actions</th>
+                        <th><spring:message code="services.tableHead.name" /></th>
+			            <th><spring:message code="services.tableHead.amount" /></th>
+			            <th><spring:message code="services.tableHead.quantity" /></th>
+			            <th><spring:message code="services.tableHead.actions" /></th>
                     </tr>
                 </thead>
                 <!--Table head-->
@@ -76,10 +76,10 @@
                 <thead class="mdb-color darken-3">
                     <tr class="text-white text-center">
                         <th>#</th>
-                        <th>Nom</th>
-                        <th>Montant Unitaire HT</th>
-                        <th>Quantite</th>
-                        <th>Actions</th>
+                        <th><spring:message code="services.tableHead.name" /></th>
+			            <th><spring:message code="services.tableHead.amount" /></th>
+			            <th><spring:message code="services.tableHead.quantity" /></th>
+			            <th><spring:message code="services.tableHead.actions" /></th>
                     </tr>
                 </thead>
                 <!--Table head-->
@@ -94,7 +94,7 @@
                             <i class="fab fa-servicestack prefix grey-text"></i>
                             <!-- <input type="text" id="materialFormRegisterNameEx" class="form-control"> -->
                             <form:input path="nom" class="form-control" />
-                            <label for="nom">Nom du service*</label>
+                            <label for="nom"><spring:message code="services.form.name" /></label>
                             <form:errors path="nom" cssClass="error" />
                         </div>
                     </td>
@@ -105,7 +105,7 @@
                             <i class="fas fa-money-bill-alt prefix grey-text"></i>
                             <!-- <input type="text" id="materialFormRegisterNameEx" class="form-control"> -->
                             <form:input path="montantHt" class="form-control" type="number" />
-                            <label for="montantHt">Montant du service*</label>
+                            <label for="montantHt"><spring:message code="services.form.amount" /></label>
                             <form:errors path="montantHt" cssClass="error" />
                         </div>
                     </td>
@@ -115,12 +115,12 @@
                             <i class="fas fa-hand-lizard prefix grey-text"></i>
                             <!-- <input type="text" id="materialFormRegisterNameEx" class="form-control"> -->
                             <form:input path="quantite" class="form-control" type="number" />
-                            <label for="quantite">Quantité*</label>
+                            <label for="quantite"><spring:message code="services.form.quantity" /></label>
                             <form:errors path="quantite" cssClass="error" />
                     </td>
                 </spring:bind>
                 <td style="vertical-align:middle;">
-                    <button class="btn btn-warning" type="submit">Mettre à jour</button>  
+                    <button class="btn btn-warning" type="submit"><spring:message code="services.tableHead.actions.update" /></button>  
                 </td>
                 </tr>
                 </tbody>

@@ -8,10 +8,10 @@
     <thead class="mdb-color darken-3">
         <tr class="text-white text-center">
             <th>#</th>
-            <th>Nom</th>
-            <th>Montant Unitaire HT</th>
-            <th>Quantite</th>
-            <th>Actions</th>
+            <th><spring:message code="services.tableHead.name" /></th>
+            <th><spring:message code="services.tableHead.amount" /></th>
+            <th><spring:message code="services.tableHead.quantity" /></th>
+            <th><spring:message code="services.tableHead.actions" /></th>
         </tr>
     </thead>
     <!--Table head-->
@@ -25,9 +25,9 @@
             <td>${String.format("%.2f", service.getMontantHt())}</td>
             <td>${service.getQuantite()}</td>
             <td><div class="btn-group" role="group" aria-label="Basic example">
-                <a href="<c:url value="/services/addForm" />" ><button type="button" class="btn btn-primary">Ajouter</button></a>
-                <a href="<c:url value="/services/updateForm/${service.getId()}" />" ><button type="button" class="btn btn-warning">Modifier</button></a>
-                <a href="<c:url value="/services/delete/${service.getId()}" />" ><button type="button" class="btn btn-danger">Supprimer</button></a>
+                <a href="<c:url value="/services/addForm" />" ><button type="button" class="btn btn-primary"><spring:message code="services.tableHead.actions.add" /></button></a>
+                <a href="<c:url value="/services/updateForm/${service.getId()}" />" ><button type="button" class="btn btn-warning"><spring:message code="services.tableHead.actions.update" /></button></a>
+                <a href="<c:url value="/services/delete/${service.getId()}" />" ><button type="button" class="btn btn-danger"><spring:message code="services.tableHead.actions.delete" /></button></a>
               </div>
             </td>
         </tr>
