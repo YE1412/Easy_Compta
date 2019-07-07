@@ -10,12 +10,12 @@
     <thead class="mdb-color darken-3">
         <tr class="text-white text-center">
             <th>#</th>
-            <th>Contenu additionnel</th>
-            <th>Identifiant des services</th>
-            <th>TVA</th>
-            <th>Prix total HT</th>
-            <th>Prix total TT</th>
-            <th>Actions</th>
+            <th><spring:message code="orders.tableHead.addContent" /></th>
+            <th><spring:message code="orders.tableHead.invId" /></th>
+            <th><spring:message code="orders.tableHead.servId" /></th>
+            <th><spring:message code="orders.tableHead.vat" /></th>
+            <th><spring:message code="orders.tableHead.totalPrice" /></th>
+            <th><spring:message code="services.tableHead.actions" /></th>
         </tr>
     </thead>
     <!--Table head-->
@@ -27,7 +27,7 @@
                 <td class="text-center" scope="row">${order.getId()}</td>
                 <td class="text-center" >
                     <c:if test="${order.getContenuAdditionnel() == ''}" >
-                        Aucun contenu additionnel.
+                        <spring:message code="orders.table.addContent.empty"/>
                     </c:if>
                     ${order.getContenuAdditionnel()}
                 </td>
@@ -36,7 +36,7 @@
                         ${id} , 
                     </c:forEach>
                     <a href="<c:url value="/services_in_order/updateForm/${order.getId()}" />">
-                        <button type="button" class="btn btn-warning btn-rounded btn-sm my-0">Modifier</button>
+                        <button type="button" class="btn btn-warning btn-rounded btn-sm my-0"><spring:message code="services.tableHead.actions.update" /></button>
                     </a>
                 </td>
                 <td class="text-center" >${String.format("%.2f", tvaList.get(order.getId()).getPourcentage() * 100.0)} %</td>
@@ -45,13 +45,13 @@
                 <td class="text-center">
                     <div class="btn-group" role="group" aria-label="Basic example">
                     <a href="<c:url value="/orders/addForm" />">
-                        <button type="button" class="btn btn-primary btn-rounded btn-sm my-0">Ajouter</button>
+                        <button type="button" class="btn btn-primary btn-rounded btn-sm my-0"><spring:message code="services.tableHead.actions.add" /></button>
                     </a>
                     <a href="<c:url value="/orders/updateForm/${order.getId()}" />">
-                        <button type="button" class="btn btn-warning btn-rounded btn-sm my-0">Modifier</button>
+                        <button type="button" class="btn btn-warning btn-rounded btn-sm my-0"><spring:message code="services.tableHead.actions.update" /></button>
                     </a>
                     <a href="<c:url value="/orders/delete/${order.getId()}" />">
-                        <button type="button" class="btn btn-danger btn-rounded btn-sm my-0">Supprimer</button>
+                        <button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><spring:message code="services.tableHead.actions.delete" /></button>
                     </a>
                     </div>
                 </td>

@@ -9,9 +9,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.easycompta.domain.service.UserManager;
 import org.easycompta.object.Commande;
@@ -23,6 +24,7 @@ import org.easycompta.service.dao.InvoicesDAOManager;
 import org.easycompta.service.dao.LanguagesDAOManager;
 import org.easycompta.service.dao.OrdersDAOManager;
 import org.easycompta.service.validator.InvoicesFormValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,7 +35,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -58,10 +59,12 @@ public class InvoicesController {
     Map<Integer, Personne> sellersListForDisplay = new LinkedHashMap<>();
 //    Map<String, String> sellersListForSelect = new LinkedHashMap<>();
     Map<Integer, Personne> buyersListForDisplay = new LinkedHashMap<>();
-//    Map<String, String> buyersListForSelect = new LinkedHashMap<>();
-    public InvoicesController() {
-    	messages = ResourceBundle.getBundle("messages");
-    	validate = ResourceBundle.getBundle("validate");
+//    WebApplicationContext ctx = null;
+    //    Map<String, String> buyersListForSelect = new LinkedHashMap<>();
+    @Autowired
+    SessionLocaleResolver slr;
+    public InvoicesController(HttpServletRequest req) {
+//    	ctx = WebApplicationContextUtils.getWebApplicationContext(servletContext);
     }
     public void setActorsManager(ActorsDAOManager actorsManager) {
         this.actorsManager = actorsManager;
@@ -201,7 +204,10 @@ public class InvoicesController {
     }
     
     @RequestMapping(value = "/addForm", method = RequestMethod.GET)
-    public String handleRequestForAddForm(Model model){
+    public String handleRequestForAddForm(HttpServletRequest req,
+    		Model model){
+    	messages = ResourceBundle.getBundle("messages", slr.resolveLocale(req));
+    	validate = ResourceBundle.getBundle("validate", slr.resolveLocale(req));
         Date now = new Date();
         model.addAttribute("now", now.toString());
         model.addAttribute("invoices_form", true);
@@ -216,7 +222,8 @@ public class InvoicesController {
     }
     
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String handleRequestForAddOrder(@ModelAttribute("invoicesForm") @Validated Facture fac, 
+    public String handleRequestForAddOrder(HttpServletRequest req,
+    		@ModelAttribute("invoicesForm") @Validated Facture fac, 
             BindingResult result,
             Model model,
             final RedirectAttributes redirectAttributes){
@@ -280,10 +287,13 @@ public class InvoicesController {
     }
     
     @RequestMapping(value = "/updateForm/update", method = RequestMethod.POST)
-    public String handleRequestForUpdateOrder(@ModelAttribute("invoicesForm") @Validated Facture fac, 
+    public String handleRequestForUpdateOrder(HttpServletRequest req,
+    		@ModelAttribute("invoicesForm") @Validated Facture fac, 
             BindingResult result,
             Model model,
             final RedirectAttributes redirectAttributes){
+    	messages = ResourceBundle.getBundle("messages", slr.resolveLocale(req));
+    	validate = ResourceBundle.getBundle("validate", slr.resolveLocale(req));
         if (result.hasErrors())
         {
             model.addAttribute("invoices_form", true);
@@ -298,7 +308,7 @@ public class InvoicesController {
         }
         Commande c=ordersManager.getOrderById(fac.getIdCommande());
         c.setIdFacture(fac.getId());
-        if(invoicesManager.updateInvoice(fac) > 0 && ordersManager.insertOrder(c) > 0)
+        if(invoicesManager.updateInvoice(fac) > 0 && ordersManager.updateOrder(c) > 0)
         {
             redirectAttributes.addFlashAttribute("msg", validate.getString("Success.invoicesForm.update"));
             redirectAttributes.addFlashAttribute("success", true);

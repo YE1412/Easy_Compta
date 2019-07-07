@@ -10,12 +10,15 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.easycompta.domain.service.UserManager;
 import org.easycompta.object.Personne;
 import org.easycompta.service.dao.ActorsDAOManager;
 import org.easycompta.service.validator.ActorsFormValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -37,9 +41,10 @@ public class ActorsController {
     private ActorsFormValidator actorsFormValidator;
     protected final Log logger = LogFactory.getLog(getClass());
     private ResourceBundle messages, validate;
+    @Autowired
+    SessionLocaleResolver slr;
     public ActorsController() {
-    	messages = ResourceBundle.getBundle("messages");
-    	validate = ResourceBundle.getBundle("validate");
+    	
     }
     public void setUserManager(UserManager userManager) {
     	
@@ -69,7 +74,9 @@ public class ActorsController {
     }
     
     @RequestMapping(value="/addForm", method = RequestMethod.GET)
-    public String handleRequestForAddForm(Model model){
+    public String handleRequestForAddForm(HttpServletRequest req, Model model){
+    	messages = ResourceBundle.getBundle("messages", slr.resolveLocale(req));
+    	validate = ResourceBundle.getBundle("validate", slr.resolveLocale(req));
         String now = (new Date()).toString();
         model.addAttribute("now", now);
         model.addAttribute("actors_form", true);
@@ -78,8 +85,8 @@ public class ActorsController {
         model.addAttribute("add", true);
         Map<String,String> types = new LinkedHashMap<>();
         types.put("-1", messages.getString("actors.select.option1"));
-	types.put("0", messages.getString("actors.select.option2"));
-	types.put("1", messages.getString("actors.select.option3"));
+		types.put("0", messages.getString("actors.select.option2"));
+		types.put("1", messages.getString("actors.select.option3"));
         model.addAttribute("typeList", types);
         return "actors";
     }

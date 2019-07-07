@@ -11,84 +11,50 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import org.easycompta.object.Tva;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 /**
  *
  * @author Yannick
  */
 public class SimpleTvaDAOManager extends AbstractDAOManager implements TvaDAOManager{
-
+	private Session session;
     public SimpleTvaDAOManager() {
         super();
     }
-
+    
+    private Transaction getTx() {
+		session = AbstractDAOManager.getHibernateSession();
+		return session.beginTransaction();
+	}
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<Tva> getAllTva() {
 		// TODO Auto-generated method stub
+		Transaction tx = getTx();
 		List<Tva> tvaList = null;
 	    TypedQuery q = session.getNamedQuery("findAllTvaOrderAsc");
 	    tvaList =  (List<Tva>) q.getResultList();
+	    session.close();
         return tvaList;
 	}
 
 	@Override
 	public Tva getTvaById(int id) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 		Tva tva = null;
 	    try {
-	    	em = newEntityManager();
-	        // utilisation de l'EntityManager
-	        tva = em.find(Tva.class, id);
+	    	// utilisation de l'EntityManager
+	        tva = session.get(Tva.class, id);
 	    } catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			session.close();
 		} finally {
-	      if (em != null) {
-	    	  closeEntityManager(em);
-	      }
+	      session.close();
 	    }
 		return tva;
-	}
-    
-//    @Override
-//    public List<Tva> getAllTva() {
-//        List<Tva> tvaList = null;
-//        org.hibernate.Transaction tx = null;
-//        session = HibernateUtil.getSessionFactory().openSession();
-//        try{
-//           tx = session.beginTransaction();
-//           Query q = session.createQuery ("from Tva");
-//           tvaList = (List<Tva>) q.list();
-//        }
-//        catch(HibernateException e){
-//            e.printStackTrace();
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return tvaList;
-//    }
-//
-//    @Override
-//    public Tva getTvaById(int id) {
-//        Tva tva = null;
-//        org.hibernate.Transaction tx = null;
-//        session = HibernateUtil.getSessionFactory().openSession();
-//        try{
-//           tx = session.beginTransaction();
-//           Query q = session.createQuery ("from Tva where id=:id");
-//           q.setInteger("id", id);
-//           tva = (Tva) q.uniqueResult();
-//        }
-//        catch(HibernateException e){
-//            e.printStackTrace();
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return tva;
-//    }
-    
+	}  
 }

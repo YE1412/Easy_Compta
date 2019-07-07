@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -30,6 +29,7 @@ import org.easycompta.service.dao.OrdersDAOManager;
 import org.easycompta.service.dao.PaymentsDAOManager;
 import org.easycompta.service.dao.ServicesDAOManager;
 import org.easycompta.service.dao.TvaDAOManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
@@ -58,10 +59,11 @@ public class InvoicePdfViewController {
     Map<Integer, Integer> ordersListForDisplay = new LinkedHashMap<>();
     Map<Integer, Personne> sellersListForDisplay = new LinkedHashMap<>();
     Map<Integer, Personne> buyersListForDisplay = new LinkedHashMap<>();
-    private ResourceBundle messages, validate;
+    private ResourceBundle validate;
+    @Autowired
+    SessionLocaleResolver slr;
     public InvoicePdfViewController(){
-    	messages = ResourceBundle.getBundle("messages");
-    	validate = ResourceBundle.getBundle("validate");
+    	
     }
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
@@ -175,10 +177,12 @@ public class InvoicePdfViewController {
     @RequestMapping(value="/{id}/{filename}", method=RequestMethod.GET)
     protected ModelAndView handleRequestInternal(@PathVariable("id") int id,
             HttpServletRequest hsr, HttpServletResponse hsr1, final RedirectAttributes redirectAttributes, Model mainModel) throws Exception {
-        Map<String,Object> model = new HashMap<>();
+//    	messages = ResourceBundle.getBundle("messages", slr.resolveLocale(hsr));
+    	validate = ResourceBundle.getBundle("validate", slr.resolveLocale(hsr));
+    	Map<String,Object> model = new HashMap<>();
         List<ProduitService> servList=new ArrayList<>();
         List<Integer> servIdList=null;
-        SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+//        SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
         Commande order=invoicesManager.getOrderByInvoiceId(id);
         int idSeller = 0, idBuyer = 0;
         servIdList = ordersManager.getContains(order.getId());

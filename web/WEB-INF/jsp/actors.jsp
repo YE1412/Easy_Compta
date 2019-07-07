@@ -16,6 +16,7 @@
         <%@include file="/WEB-INF/jspf/header_in.jspf" %>
         <main class="mt-5" style="margin-left: 15em;">
             <div class="container" >
+        	<h1><spring:message code="actors.headline" /></h1>
             <c:if test="${msg != NULL}">
                 <c:choose>
                 <c:when test="${success}">

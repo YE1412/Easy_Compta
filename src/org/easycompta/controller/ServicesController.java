@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.easycompta.domain.service.UserManager;
@@ -18,6 +20,7 @@ import org.easycompta.object.Tva;
 import org.easycompta.service.dao.OrdersDAOManager;
 import org.easycompta.service.dao.ServicesDAOManager;
 import org.easycompta.service.validator.ServicesFormValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +30,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -41,8 +45,10 @@ public class ServicesController {
     private OrdersDAOManager ordersManager;
     ServicesFormValidator servicesFormValidator;
     private ResourceBundle validate;
+    @Autowired
+    SessionLocaleResolver slr;
     public ServicesController() {
-    	validate = ResourceBundle.getBundle("validate");
+    	
     }
     public void setOrdersManager(OrdersDAOManager ordersManager) {
         this.ordersManager = ordersManager;
@@ -89,10 +95,12 @@ public class ServicesController {
     }
     
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String handleRequestForAddService(@ModelAttribute("servicesForm") @Validated ProduitService service, 
+    public String handleRequestForAddService(HttpServletRequest req, 
+    		@ModelAttribute("servicesForm") @Validated ProduitService service, 
             BindingResult result,
             Model model,
             final RedirectAttributes redirectAttributes){
+    	validate = ResourceBundle.getBundle("validate", slr.resolveLocale(req));
         if (result.hasErrors())
         {
             model.addAttribute("services_form", true);
@@ -129,10 +137,12 @@ public class ServicesController {
     }
     
     @RequestMapping(value = "/updateForm/update", method = RequestMethod.POST)
-    public String handleRequestForUpdateService(@ModelAttribute("servicesForm") @Validated ProduitService service, 
+    public String handleRequestForUpdateService(HttpServletRequest req,
+    		@ModelAttribute("servicesForm") @Validated ProduitService service, 
             BindingResult result,
             Model model,
             final RedirectAttributes redirectAttributes){
+    	validate = ResourceBundle.getBundle("validate", slr.resolveLocale(req));
         if (result.hasErrors())
         {
             model.addAttribute("services_form", true);
@@ -168,9 +178,11 @@ public class ServicesController {
     }
     
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
-    public String handleRequestForDeleteService(@PathVariable("id") int id,
+    public String handleRequestForDeleteService(HttpServletRequest req,
+    		@PathVariable("id") int id,
             Model model,
             final RedirectAttributes redirectAttributes){
+    	validate = ResourceBundle.getBundle("validate", slr.resolveLocale(req));
         if(servicesManager.deleteService(id) == 1)
         {
             redirectAttributes.addFlashAttribute("msg", validate.getString("Success.servicesForm.delete"));

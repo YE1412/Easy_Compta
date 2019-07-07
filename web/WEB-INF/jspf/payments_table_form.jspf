@@ -12,9 +12,9 @@
                 <thead class="mdb-color darken-3">
                     <tr class="text-white text-center">
                         <th>#</th>
-                        <th>Etat</th>
-                        <th>Reste à payer</th>
-                        <th>Actions</th>
+                        <th><spring:message code="payments.tableHead.state" /></th>
+                        <th><spring:message code="payments.tableHead.rest" /></th>
+                        <th><spring:message code="services.tableHead.actions" /></th>
                     </tr>
                 </thead>
                 <!--Table head-->
@@ -28,7 +28,7 @@
                     <div class="${status.error ? 'has-error' : ''} input-group" style="margin-top:1.5em;">
                         <i class="fas fa-certificate prefix  grey-text"></i>
                         <div class="input-group-prepend">
-                            <label class="input-group-text" for="type">Etat</label>
+                            <label class="input-group-text" for="type"><spring:message code="payments.tableHead.state" />*</label>
                         </div>
                         <form:select path="etat" items="${paymentStateList}" class="custom-select" />
                         <form:errors path="etat" cssClass="error" />
@@ -40,7 +40,7 @@
                     <div class="${status.error ? 'has-error' : ''} input-group" style="margin-top:1.5em;">
                         <i class="fas fa-credit-card prefix  grey-text"></i>
                         <div class="input-group-prepend">
-                            <label class="input-group-text" for="type">Reste</label>
+                            <label class="input-group-text" for="type"><spring:message code="payments.tableHead.rest" />*</label>
                         </div>
                         <form:input path="reste" type="number"  class="form-control md-text" />
                         <form:errors path="reste" cssClass="error" />
@@ -48,7 +48,7 @@
                     </td>
                 </spring:bind>
                 <td style="vertical-align:middle;">
-                    <button class="btn btn-primary" type="submit">Ajouter</button>
+                    <button class="btn btn-primary" type="submit"><spring:message code="services.tableHead.actions.add" /></button>
                 </td>
                 </tr>
                 </tbody>
@@ -68,9 +68,9 @@
                 <thead class="mdb-color darken-3">
                     <tr class="text-white text-center">
                         <th>#</th>
-                        <th>Etat</th>
-                        <th>Reste à payer</th>
-                        <th>Actions</th>
+                        <th><spring:message code="payments.tableHead.state" /></th>
+                        <th><spring:message code="payments.tableHead.rest" /></th>
+                        <th><spring:message code="services.tableHead.actions" /></th>
                     </tr>
                 </thead>
                 <!--Table head-->
@@ -84,7 +84,7 @@
                     <div class="${status.error ? 'has-error' : ''} input-group" style="margin-top:1.5em;">
                         <i class="fas fa-certificate prefix  grey-text"></i>
                         <div class="input-group-prepend">
-                            <label class="input-group-text" for="type">Etat</label>
+                            <label class="input-group-text" for="type"><spring:message code="payments.tableHead.state" /></label>
                         </div>
                         <form:select path="etat" items="${paymentStateList}" class="custom-select" />
                         <form:errors path="etat" cssClass="error" />
@@ -96,7 +96,7 @@
                     <div class="${status.error ? 'has-error' : ''} input-group" style="margin-top:1.5em;">
                         <i class="fas fa-credit-card prefix  grey-text"></i>
                         <div class="input-group-prepend">
-                            <label class="input-group-text" for="type">Reste</label>
+                            <label class="input-group-text" for="type"><spring:message code="payments.tableHead.rest" /></label>
                         </div>
                         <form:input path="reste" type="number"  class="form-control md-text" />
                         <form:errors path="reste" cssClass="error" />
@@ -104,7 +104,7 @@
                     </td>
                 </spring:bind>
                 <td style="vertical-align:middle;">
-                    <button class="btn btn-primary" type="submit">Modifier</button>
+                    <button class="btn btn-primary" type="submit"><spring:message code="services.tableHead.actions.update" /></button>
                 </td>
                 </tr>
                 </tbody>

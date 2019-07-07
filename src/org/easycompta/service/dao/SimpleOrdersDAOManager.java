@@ -8,7 +8,6 @@ package org.easycompta.service.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -21,32 +20,37 @@ import org.easycompta.object.Comporter;
 import org.easycompta.object.ComporterId;
 import org.easycompta.object.Contains;
 import org.easycompta.object.Tva;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 /**
  *
  * @author Yannick
  */
 public class SimpleOrdersDAOManager extends AbstractDAOManager implements OrdersDAOManager{
-    public SimpleOrdersDAOManager() {
+    private Session session;
+	public SimpleOrdersDAOManager() {
         super();
     }
-
+	private Transaction getTx() {
+		session = AbstractDAOManager.getHibernateSession();
+		return session.beginTransaction();
+	}
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List<Commande> getAllOrders() {
 		// TODO Auto-generated method stub
 		List<Commande> ordersList = null;
-		EntityManager em = null;
+		Transaction tx = getTx();
 		try {
-			em = newEntityManager();
-			TypedQuery q  = (TypedQuery) em.createNamedQuery("findAllOrdersByAsc");
+			TypedQuery q  = (TypedQuery) session.createNamedQuery("findAllOrdersByAsc");
 			ordersList = q.getResultList();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			session.close();
 		} finally {
-			if (em != null)
-				closeEntityManager(em);
+			session.close();
 		}
 		return ordersList;
 	}
@@ -54,62 +58,57 @@ public class SimpleOrdersDAOManager extends AbstractDAOManager implements Orders
 	@Override
 	public int insertOrder(Commande order) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
-		   try {
-		      em = newEntityManager();
-		      // utilisation de l'EntityManager
-		      em.persist(order);
-		      em.getTransaction().commit();
+		Transaction tx = getTx();
+		try {
+		     // utilisation de l'EntityManager
+		      session.persist(order);
+		      tx.commit();
 //		      System.err.println("addProduitService witdh id=" + service.getId());
 		   } catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			session.close();
 			return 0;
 		} finally {
-		      if (em != null) {
-		    	  closeEntityManager(em);
-		      }
-		   }
+			session.close();
+		}
 		return 1;
 	}
 
 	@Override
 	public int insertServicesInOrder(Contains cont) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
-		   try {
-		   	 em = newEntityManager();
-		   	 for (Integer id:cont.getComporte()) {
-		   		 Comporter comp=new Comporter();
-		         comp.setId(new ComporterId(cont.getIdCommande(), id));
-		         em.persist(comp);
-		   	 }
-		   	 em.getTransaction().commit();
-		   } catch(Exception e) {
-			   e.printStackTrace();
-			   return 0;
-		   } finally{
-			   if (em != null) {
-				   closeEntityManager(em);   
-			   }
-		   }
+		Transaction tx = getTx();
+	   try {
+//	   	 em = newEntityManager();
+	   	 for (Integer id:cont.getComporte()) {
+	   		 Comporter comp=new Comporter();
+	         comp.setId(new ComporterId(cont.getIdCommande(), id));
+	         session.persist(comp);
+	   	 }
+	   	 tx.commit();
+	   } catch(Exception e) {
+		   e.printStackTrace();
+		   session.close();
+		   return 0;
+	   } finally{
+		   session.close();
+	   }
 		return 1;
 	}
 
 	@Override
 	public Commande getOrderById(int id) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 		Commande c = null;
 		try {
-			em = newEntityManager();
-			c = em.find(Commande.class, id);
+			c = session.get(Commande.class, id);
 		} catch(Exception e) {
 			e.printStackTrace();
+			session.close();
 		} finally {
-			if (em != null) {
-				closeEntityManager(em);
-			}
+			session.close();
 		}
 		return c;
 	}
@@ -117,20 +116,17 @@ public class SimpleOrdersDAOManager extends AbstractDAOManager implements Orders
 	@Override
 	public int deleteOrder(int id) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 		Commande c = null;
 		try {
-			em = newEntityManager();
-			c = em.find(Commande.class, id);
-			em.remove(c);
-			em.getTransaction().commit();
+			c = session.get(Commande.class, id);
+			session.remove(c);
+			tx.commit();
 		} catch(Exception e) {
 			e.printStackTrace();
 			return 0;
 		} finally {
-			if (em != null) {
-				closeEntityManager(em);
-			}
+			session.close();
 		}
 		return 1;
 	}
@@ -138,22 +134,22 @@ public class SimpleOrdersDAOManager extends AbstractDAOManager implements Orders
 	@Override
 	public Commande getOrderByInvoiceId(int idInvoice) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 		Commande o = null;
 		try {
-			em = newEntityManager();
-			CriteriaBuilder cb = em.getCriteriaBuilder();
+			CriteriaBuilder cb = session.getCriteriaBuilder();
 			CriteriaQuery<Commande> q = cb.createQuery(Commande.class);
 			Root<Commande> c = q.from(Commande.class);
 			ParameterExpression<Integer> p = cb.parameter(Integer.class);
 			q.select(c).where(cb.equal(c.get("idFacture"), p));
-			TypedQuery<Commande> query = em.createQuery(q);
+			TypedQuery<Commande> query = session.createQuery(q);
 			query.setParameter(p, idInvoice);
 			o = query.getSingleResult();
 		} catch (Exception e) {
 			e.printStackTrace();
+			session.close();
 		} finally {
-			closeEntityManager(em);
+			session.close();
 		}
 		return o;
 	}
@@ -161,18 +157,17 @@ public class SimpleOrdersDAOManager extends AbstractDAOManager implements Orders
 	@Override
 	public List<Integer> getContains(int id) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 		List<ComporterId> compList = new ArrayList<ComporterId>();
 		List<Integer> servsList = new ArrayList<Integer>();
 		try {
-			em = newEntityManager();
-			CriteriaBuilder cb = em.getCriteriaBuilder();
+			CriteriaBuilder cb = session.getCriteriaBuilder();
 			CriteriaQuery<Tuple> q = cb.createTupleQuery();
 			Root<Comporter> c = q.from(Comporter.class);
 			ParameterExpression<Integer> p = cb.parameter(Integer.class);
 		    q.select(cb.tuple(c.get("id"))).where(cb.equal(c.get("id").get("idCommande"), p));
 //			q.multiselect(c.get("id")).where(cb.equal(c.get("idCommande"), p));
-			TypedQuery<Tuple> query = em.createQuery(q);
+			TypedQuery<Tuple> query = session.createQuery(q);
 			query.setParameter(p, id);
 			List<Tuple> results = query.getResultList();
 			for (Tuple t:results) {
@@ -183,10 +178,9 @@ public class SimpleOrdersDAOManager extends AbstractDAOManager implements Orders
           });
 		} catch(Exception e) {
 			e.printStackTrace();
+			session.close();
 		}finally {
-		      if (em != null) {
-		    	  closeEntityManager(em);
-		      }
+		      session.close();
 		}
 		return servsList;
 	}
@@ -196,17 +190,16 @@ public class SimpleOrdersDAOManager extends AbstractDAOManager implements Orders
 	public List<Tva> getAllTva() {
 		// TODO Auto-generated method stub
 		List<Tva> tvaList = null;
-		EntityManager em = null;
+		Transaction tx = getTx();
 		try {
-			em = newEntityManager();
-			TypedQuery q  = (TypedQuery) em.createNamedQuery("findAllTVA");
+			TypedQuery q  = (TypedQuery) session.createNamedQuery("findAllTVA");
 			tvaList = q.getResultList();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			session.close();
 		} finally {
-			if (em != null)
-				closeEntityManager(em);
+			session.close();
 		}
 		return tvaList;
 	}
@@ -214,31 +207,29 @@ public class SimpleOrdersDAOManager extends AbstractDAOManager implements Orders
 	@Override
 	public int deleteContains(int idCommande) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 //		List<Comporter> compList = new ArrayList<Comporter>();
 		try {
-			em = newEntityManager();
-			CriteriaBuilder cb = em.getCriteriaBuilder();
+			CriteriaBuilder cb = session.getCriteriaBuilder();
 			CriteriaQuery<Tuple> q = cb.createTupleQuery();
 			Root<Comporter> c = q.from(Comporter.class);
 			ParameterExpression<Integer> p = cb.parameter(Integer.class);
 		    q.select(cb.tuple(c.get("id"))).where(cb.equal(c.get("id").get("idCommande"), p));
-			TypedQuery<Tuple> query = em.createQuery(q);
+			TypedQuery<Tuple> query = session.createQuery(q);
 			query.setParameter(p, idCommande);
 			List<Tuple> results = query.getResultList();
 			for (Tuple t:results) {
 //				compList.add((Comporter) t.get(0));
-				em.remove((Comporter) t.get(0));
+				session.remove((Comporter) t.get(0));
 			}
 //			em.remove(compList);
-			em.getTransaction().commit();
+			tx.commit();
 		} catch(Exception e) {
 			e.printStackTrace();
+			session.close();
 			return 0;
 		}finally {
-		      if (em != null) {
-		    	  closeEntityManager(em);
-		      }
+		      session.close();
 		}
 		return 1;
 	}
@@ -246,17 +237,16 @@ public class SimpleOrdersDAOManager extends AbstractDAOManager implements Orders
 	@Override
 	public Tva getTvaById(int idTva) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 		Tva tva = null;
 		try {
-			em = newEntityManager();
-			tva = em.find(Tva.class, idTva);
+//			em = newEntityManager();
+			tva = session.get(Tva.class, idTva);
 		} catch(Exception e) {
 			e.printStackTrace();
+			session.close();
 		} finally {
-			if (em != null) {
-				closeEntityManager(em);
-			}
+			session.close();
 		}
 		return tva;
 	}
@@ -264,244 +254,17 @@ public class SimpleOrdersDAOManager extends AbstractDAOManager implements Orders
 	@Override
 	public int updateOrder(Commande order) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
-		Commande c = null;
+		Transaction tx = getTx();
 		try {
-			em = newEntityManager();
-			c = em.find(Commande.class, order.getId());
-			c.setContenuAdditionnel(order.getContenuAdditionnel());
-			c.setIdFacture(order.getIdFacture());
-			c.setIdTva(order.getIdTva());
-			c.setPriceHt(order.getPriceHt());
-			c.setPriceTt(order.getPriceTt());
-			em.flush();
-			em.getTransaction().commit();
+			session.saveOrUpdate(order);
+			tx.commit();
 		} catch(Exception e) {
 			e.printStackTrace();
+			session.close();
 			return 0;
 		} finally {
-			if (em != null) {
-				closeEntityManager(em);
-			}
+			session.close();
 		}
 		return 1;
 	}
-
-    
-//    @Override
-//    public List<Commande> getAllOrders() {
-//        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        List<Commande> ordersList = null;
-//        org.hibernate.Transaction tx = null;
-//        session = HibernateUtil.getSessionFactory().openSession();
-//        try{
-//           tx = session.beginTransaction();
-//           Query q = session.createQuery ("from Commande");
-//           ordersList = (List<Commande>) q.list();
-//        }
-//        catch(HibernateException e){
-//            e.printStackTrace();
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return ordersList;
-//    }
-//
-//    @Override
-//    public int insertOrder(Commande order) {
-//        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        org.hibernate.Transaction tx = null;
-//        session = HibernateUtil.getSessionFactory().openSession();
-//         try {
-//            tx = session.beginTransaction();
-//            session.saveOrUpdate(order);
-//            session.flush();
-//            tx.commit();
-//        } catch (HibernateException e) {
-//            tx.rollback();
-//            e.printStackTrace();
-//            return 0;
-//        }
-//        finally{
-//            //System.out.println(order.getId()+" "+order.getIdFacture());
-//            session.close();
-//        }
-//        return 1;
-//    }
-//
-//    @Override
-//    public Commande getOrderById(int id) {
-//        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        List<Commande> ordersList = null;
-//        Commande order = null;
-//        session = HibernateUtil.getSessionFactory().openSession();
-//        try {
-//            org.hibernate.Transaction tx = session.beginTransaction();
-//            Query q = session.createQuery ("from Commande where id = ?");
-//            q.setParameter(0, id);
-//            ordersList = (List<Commande>)q.list();
-//            order = ordersList.get(0);
-//        } catch (HibernateException e) {
-//            e.printStackTrace();
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return order;
-//    }
-//
-//    @Override
-//    public int deleteOrder(int id) {
-//        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        session = HibernateUtil.getSessionFactory().openSession();
-//        org.hibernate.Transaction tx = null;
-//        try {
-//            tx = session.beginTransaction();
-//            Query q = session.createQuery ("DELETE Commande where id = ?");
-//            q.setParameter(0, id);
-//            q.executeUpdate();
-//            tx.commit();
-//        } catch (HibernateException e) {
-//            tx.rollback();
-//            e.printStackTrace();
-//            return 0;
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return 1;
-//    }
-//
-//    @Override
-//    public Commande getOrderByInvoiceId(int idInvoice) {
-//        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        List<Commande> ordersList = null;
-//        Commande order = null;
-//        session = HibernateUtil.getSessionFactory().openSession();
-//        try {
-//            org.hibernate.Transaction tx = session.beginTransaction();
-//            Query q = session.createQuery ("from Commande where idFacture = ?");
-//            q.setParameter(0, idInvoice);
-//            ordersList = (List<Commande>)q.list();
-//            order = ordersList.get(0);
-//        } catch (HibernateException e) {
-//            e.printStackTrace();
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return order;
-//    }
-//
-//    @Override
-//    public List<Tva> getAllTva() {
-//        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        List<Tva> tvaList = null;
-//        session = HibernateUtil.getSessionFactory().openSession();
-//        try {
-//            org.hibernate.Transaction tx = session.beginTransaction();
-//            Query q = session.createQuery ("from Tva");
-//            tvaList = (List<Tva>)q.list();
-//        } catch (HibernateException e) {
-//            e.printStackTrace();
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return tvaList;
-//    }
-//
-//    @Override
-//    public int insertServicesInOrder(Contains cont) {
-//        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        org.hibernate.Transaction tx = null;
-//        session = HibernateUtil.getSessionFactory().openSession();
-//         try {
-//            tx = session.beginTransaction();
-//            cont.getComporte().forEach((item) -> {
-//                Comporter comp=new Comporter();
-//                comp.setId(new ComporterId(cont.getIdCommande(), item));
-//                session.saveOrUpdate(comp);
-//            });
-//            session.flush();
-//            tx.commit();
-//        } catch (HibernateException e) {
-//            tx.rollback();
-//            e.printStackTrace();
-//            return 0;
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return 1;
-//    }
-//
-//    @Override
-//    public List<Integer> getContains(int id) {
-//        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        List<ComporterId> compList = null;
-//        List<Integer> servList = new ArrayList<>();
-//        session = HibernateUtil.getSessionFactory().openSession();
-//        try {
-//            org.hibernate.Transaction tx = session.beginTransaction();
-//            Query q = session.createQuery ("select c.id from Comporter c where id_commande = ?");
-//            q.setParameter(0, id);
-//            compList = (List<ComporterId>)q.list();
-//            compList.forEach((item) -> {
-//                servList.add(item.getIdProduitService());
-//            });
-//        } catch (HibernateException e) {
-//            e.printStackTrace();
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return servList;
-//    }
-//
-//    @Override
-//    public int deleteContains(int idCommande) {
-//        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        int retour = 0;
-//        session = HibernateUtil.getSessionFactory().openSession();
-//        org.hibernate.Transaction tx = null;
-//        try {
-//            tx = session.beginTransaction();
-//            Query q = session.createQuery ("delete Comporter where id_commande = :id");
-//            q.setParameter("id", idCommande);
-//            //session.
-//            retour = q.executeUpdate();
-//            tx.commit();
-//        } catch (HibernateException e) {
-//            tx.rollback();
-//            e.printStackTrace();
-//            return -1;
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return retour;
-//    }
-//
-//    @Override
-//    public Tva getTvaById(int idTva) {
-//        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        List<Tva> tvaList = null;
-//        session = HibernateUtil.getSessionFactory().openSession();
-//        try {
-//            org.hibernate.Transaction tx = session.beginTransaction();
-//            Query q = session.createQuery ("from Tva c where id = ?");
-//            q.setParameter(0, idTva);
-//            tvaList = (List<Tva>)q.list();
-//        } catch (HibernateException e) {
-//            e.printStackTrace();
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return tvaList.get(0);
-//    }
-    
-    
 }

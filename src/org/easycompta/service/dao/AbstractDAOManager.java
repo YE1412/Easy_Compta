@@ -6,31 +6,38 @@ import javax.persistence.PersistenceException;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.Metadata;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
 
 public abstract class AbstractDAOManager {
-	protected Session session = null;
-	SessionFactory factory =  null;
+//	final protected Session session;
+	static SessionFactory factory;
 	public AbstractDAOManager() {
-    	StandardServiceRegistry ssr=new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();  
-        Metadata meta=new MetadataSources(ssr).getMetadataBuilder().build();  
-          
-        factory=meta.getSessionFactoryBuilder().build();  
+//		factory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+		//    	StandardServiceRegistry ssr=new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();  
+//        Metadata meta=new MetadataSources(ssr).getMetadataBuilder().build();  
+//        session = factory.openSession();
+//        factory=meta.getSessionFactoryBuilder().build();  
 //        session=factory.openSession(); 
 //        this.session =  HibernateUtil.getSessionFactory().getCurrentSession();
 //        session.beginTransaction();
 //        factory = session.getEntityManagerFactory();
+		factory = createFactory();
     }
+	public static SessionFactory createFactory() {
+		factory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+		return factory;
+	}
+	public static Session getHibernateSession() {
+		Session session = factory.openSession();
+		return session;
+	}
 	// Créer un EM et ouvrir une transaction
- 	protected EntityManager newEntityManager() throws Exception{
- 	   EntityManager em = factory.createEntityManager();
- 	   //factory.addNamedQuery(query.getIdentifier(), em.createQuery(query.getQuery()));
- 	   em.getTransaction().begin();
- 	   return (em);
- 	}
+// 	protected EntityManager newEntityManager() throws Exception{
+// 	   EntityManager em = factory.createEntityManager();
+// 	   //factory.addNamedQuery(query.getIdentifier(), em.createQuery(query.getQuery()));
+// 	   em.getTransaction().begin();
+// 	   return (em);
+// 	}
 // 	protected void initDbDatas() {
 //// 		List<Tva> tvaList = new ArrayList<Tva>();
 // 		try {

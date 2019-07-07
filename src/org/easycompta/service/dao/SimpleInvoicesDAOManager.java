@@ -18,31 +18,37 @@ import javax.persistence.criteria.Root;
 import org.easycompta.object.Commande;
 import org.easycompta.object.Concerner;
 import org.easycompta.object.Facture;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 /**
  *
  * @author Yannick
  */
 public class SimpleInvoicesDAOManager extends AbstractDAOManager implements InvoicesDAOManager{
-    public SimpleInvoicesDAOManager() {
+    private Session session;
+	public SimpleInvoicesDAOManager() {
        super();
     }
-
+	
+	private Transaction getTx() {
+		session = AbstractDAOManager.getHibernateSession();
+		return session.beginTransaction();
+	}
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<Facture> getAllInvoices() {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 		List<Facture> invList = null;
 		try {
-			em = newEntityManager();
-			TypedQuery q = (TypedQuery) em.createNamedQuery("findAllInvoicesOrderDateDesc");
+			TypedQuery q = (TypedQuery) session.createNamedQuery("findAllInvoicesOrderDateDesc");
 			invList = q.getResultList();
 		}catch (Exception e) {
 			e.printStackTrace();
+			session.close();
 		} finally {
-			if (em != null)
-				closeEntityManager(em);
+			session.close();
 		}
 		return invList;
 	}
@@ -50,17 +56,16 @@ public class SimpleInvoicesDAOManager extends AbstractDAOManager implements Invo
 	@Override
 	public int insertInvoice(Facture fac) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 		try {
-			em = newEntityManager();
-			em.persist(fac);
-			em.getTransaction().commit();
+			session.persist(fac);
+			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
+			session.close();
 			return 0;
 		} finally {
-			if (em != null)
-				closeEntityManager(em);
+			session.close();
 		}
 		return 1;
 	}
@@ -68,16 +73,15 @@ public class SimpleInvoicesDAOManager extends AbstractDAOManager implements Invo
 	@Override
 	public Facture getInvoiceById(int id) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 		Facture fac = null;
 		try {
-			em = newEntityManager();
-			fac = em.find(Facture.class, id);
+			fac = session.get(Facture.class, id);
 		} catch (Exception e) {
 			e.printStackTrace();
+			session.close();
 		} finally {
-			if (em != null)
-				closeEntityManager(em);
+			session.close();
 		}
 		return fac;
 	}
@@ -85,19 +89,18 @@ public class SimpleInvoicesDAOManager extends AbstractDAOManager implements Invo
 	@Override
 	public int deleteInvoice(int id) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 		Facture fac = null;
 		try {
-			em = newEntityManager();
-			fac = em.find(Facture.class, id);
-			em.remove(fac);
-			em.getTransaction().commit();
+			fac = session.get(Facture.class, id);
+			session.remove(fac);
+			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
+			session.close();
 			return 0;
 		} finally {
-			if (em != null)
-				closeEntityManager(em);
+			session.close();
 		}
 		return 1;
 	}
@@ -105,24 +108,22 @@ public class SimpleInvoicesDAOManager extends AbstractDAOManager implements Invo
 	@Override
 	public Commande getOrderByInvoiceId(int idFac){
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 		Commande ordr = null;
 		try {
-			em = newEntityManager();
-			CriteriaBuilder cb = em.getCriteriaBuilder();
+			CriteriaBuilder cb = session.getCriteriaBuilder();
 			CriteriaQuery<Commande> q = cb.createQuery(Commande.class);
 			Root<Commande> c = q.from(Commande.class);
 			ParameterExpression<Integer> p = cb.parameter(Integer.class);
 		    q.select(c).where(cb.equal(c.get("idFacture"), p));
-			TypedQuery<Commande> query = em.createQuery(q);
+			TypedQuery<Commande> query = session.createQuery(q);
 			query.setParameter(p, idFac);
 			ordr = query.getSingleResult();
 		} catch(Exception e) {
 			e.printStackTrace();
+			session.close();
 		}finally {
-		      if (em != null) {
-		    	  closeEntityManager(em);
-		      }
+		      session.close();
 		}
 		return ordr;
 	}
@@ -130,69 +131,52 @@ public class SimpleInvoicesDAOManager extends AbstractDAOManager implements Invo
 	@Override
 	public int getSellerByInvoiceId(int idFac) throws Exception{
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 		int	id = 0;
-//		try {
-			em = newEntityManager();
-			CriteriaBuilder cb = em.getCriteriaBuilder();
-			CriteriaQuery<Tuple> q = cb.createTupleQuery();
-			Root<Concerner> c = q.from(Concerner.class);
-			ParameterExpression<Integer> p = cb.parameter(Integer.class);
-		    q.select(cb.tuple(c.get("idVendeur"))).where(cb.equal(c.get("idFacture"), p));
-			TypedQuery<Tuple> query = em.createQuery(q);
-			query.setParameter(p, idFac);
-			Tuple t = query.getSingleResult();
-			id = (int) t.get(0);
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//		}finally {
-		      if (em != null) {
-		    	  closeEntityManager(em);
-		      }
-//		}
+		CriteriaBuilder cb = session.getCriteriaBuilder();
+		CriteriaQuery<Tuple> q = cb.createTupleQuery();
+		Root<Concerner> c = q.from(Concerner.class);
+		ParameterExpression<Integer> p = cb.parameter(Integer.class);
+	    q.select(cb.tuple(c.get("idVendeur"))).where(cb.equal(c.get("idFacture"), p));
+		TypedQuery<Tuple> query = session.createQuery(q);
+		query.setParameter(p, idFac);
+		Tuple t = query.getSingleResult();
+		id = (int) t.get(0);
+		session.close();
 		return id;
 	}
 
 	@Override
 	public int getBuyerByInvoiceId(int idFac) throws Exception{
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 		int id = 0;
-//		try {
-			em = newEntityManager();
-			CriteriaBuilder cb = em.getCriteriaBuilder();
-			CriteriaQuery<Tuple> q = cb.createTupleQuery();
-			Root<Concerner> c = q.from(Concerner.class);
-			ParameterExpression<Integer> p = cb.parameter(Integer.class);
-		    q.select(cb.tuple(c.get("idClient"))).where(cb.equal(c.get("idFacture"), p));
-			TypedQuery<Tuple> query = em.createQuery(q);
-			query.setParameter(p, idFac);
-			Tuple t = query.getSingleResult();
-			id = (int) t.get(0);
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//		}finally {
-		      if (em != null) {
-		    	  closeEntityManager(em);
-		      }
-//		}
+		CriteriaBuilder cb = session.getCriteriaBuilder();
+		CriteriaQuery<Tuple> q = cb.createTupleQuery();
+		Root<Concerner> c = q.from(Concerner.class);
+		ParameterExpression<Integer> p = cb.parameter(Integer.class);
+	    q.select(cb.tuple(c.get("idClient"))).where(cb.equal(c.get("idFacture"), p));
+		TypedQuery<Tuple> query = session.createQuery(q);
+		query.setParameter(p, idFac);
+		Tuple t = query.getSingleResult();
+		id = (int) t.get(0);
+		session.close();
 		return id;
 	}
 
 	@Override
 	public int insertActors(Concerner conc) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 		try {
-			em = newEntityManager();
-			em.persist(conc);
-			em.getTransaction().commit();
+			session.persist(conc);
+			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
+			session.close();
 			return 0;
 		} finally {
-			if (em != null)
-				closeEntityManager(em);
+			session.close();
 		}
 		return 1;
 	}
@@ -200,203 +184,18 @@ public class SimpleInvoicesDAOManager extends AbstractDAOManager implements Invo
 	@Override
 	public int updateInvoice(Facture fac) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 		Facture f = null;
 		try {
-			em = newEntityManager();
-			f = em.find(Facture.class, fac.getId());
-			f.setDate(fac.getDate());
-			f.setIdCommande(fac.getIdCommande());
-			f.setIdLangue(fac.getIdLangue());
-			em.flush();
-			em.getTransaction().commit();
+			session.saveOrUpdate(fac);
+			tx.commit();
 		} catch(Exception e) {
 			e.printStackTrace();
+			session.close();
 			return 0;
 		} finally {
-			if (em != null) {
-				closeEntityManager(em);
-			}
+			session.close();
 		}
 		return 1;
 	}
-    
-//    @Override
-//    public List<Facture> getAllInvoices() {
-//        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        List<Facture> invoicesList = null;
-//        org.hibernate.Transaction tx = null;
-//        session = HibernateUtil.getSessionFactory().openSession();
-//        try{
-//           tx = session.beginTransaction();
-//           Query q = session.createQuery ("from Facture");
-//           invoicesList = (List<Facture>) q.list();
-//        }
-//        catch(HibernateException e){
-//            e.printStackTrace();
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return invoicesList;
-//    }
-//
-//    @Override
-//    public int insertInvoice(Facture fac) {
-//        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        int retour = 1;
-//        org.hibernate.Transaction tx = null;
-//        session = HibernateUtil.getSessionFactory().openSession();
-//         try {
-//            tx = session.beginTransaction();
-//            session.saveOrUpdate(fac);
-//            session.flush();
-//            tx.commit();
-//        } catch (HibernateException e) {
-//            tx.rollback();
-//            e.printStackTrace();
-//            return 0;
-//        }
-//        finally{
-//            //System.out.println(fac.getId());
-//            session.close();
-//        }
-//        retour = getLastInsertInvoiceId();
-//        //System.out.println(retour);
-//        return retour;
-//    }
-//
-//    @Override
-//    public Facture getInvoiceById(int id) {
-//        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        List<Facture> invoicesList = null;
-//        Facture invoice = null;
-//        session = HibernateUtil.getSessionFactory().openSession();
-//        try {
-//            org.hibernate.Transaction tx = session.beginTransaction();
-//            Query q = session.createQuery ("from Facture where id = ?");
-//            q.setParameter(0, id);
-//            invoicesList = (List<Facture>)q.list();
-//            invoice = invoicesList.get(0);
-//        } catch (HibernateException e) {
-//            e.printStackTrace();
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return invoice;
-//    }
-//
-//    @Override
-//    public int deleteInvoice(int id) {
-//        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        session = HibernateUtil.getSessionFactory().openSession();
-//        org.hibernate.Transaction tx = null;
-//        try {
-//            tx = session.beginTransaction();
-//            Query q = session.createQuery ("DELETE Facture where id = ?");
-//            q.setParameter(0, id);
-//            tx.commit();
-//        } catch (HibernateException e) {
-//            tx.rollback();
-//            e.printStackTrace();
-//            return 0;
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return 1;
-//    }
-//
-//    @Override
-//    public Commande getOrderByInvoiceId(int idFac) {
-//        Commande order = null;
-//        session = HibernateUtil.getSessionFactory().openSession();
-//        try {
-//            org.hibernate.Transaction tx = session.beginTransaction();
-//            Query q = session.createQuery ("from Commande where id_facture = ?");
-//            q.setParameter(0, idFac);
-//            order = (Commande)q.uniqueResult();
-//        } catch (HibernateException e) {
-//            e.printStackTrace();
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return order;
-//    }
-//    
-//    private int getLastInsertInvoiceId()
-//    {
-//        int retour = 0;
-//        session = HibernateUtil.getSessionFactory().openSession();
-//        try {
-//            org.hibernate.Transaction tx = session.beginTransaction();
-//            Query q = session.createQuery ("select max(id) from Facture");
-//            retour = (int)q.uniqueResult();
-//        } catch (HibernateException e) {
-//            e.printStackTrace();
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return retour;
-//    }
-//
-//    @Override
-//    public int getSellerByInvoiceId(int idFac) {
-//        int p = 0;
-//        session = HibernateUtil.getSessionFactory().openSession();
-//        try {
-//            org.hibernate.Transaction tx = session.beginTransaction();
-//            Query q = session.createQuery ("select c.idVendeur from Concerner c where  c.idFacture = :id");
-//            q.setParameter("id", idFac);
-//            p = q.uniqueResult() != null ? (int)q.uniqueResult() : 0;
-//        } catch (HibernateException e) {
-//            e.printStackTrace();
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return p;
-//    }
-//
-//    @Override
-//    public int getBuyerByInvoiceId(int idFac) {
-//        int p = 0;
-//        session = HibernateUtil.getSessionFactory().openSession();
-//        try {
-//            org.hibernate.Transaction tx = session.beginTransaction();
-//            Query q = session.createQuery ("select c.idClient from Concerner c where  c.idFacture = :id");
-//            q.setParameter("id", idFac);
-//            p = q.uniqueResult() != null ? (int)q.uniqueResult() : 0;
-//        } catch (HibernateException e) {
-//            e.printStackTrace();
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return p;
-//    }
-//
-//    @Override
-//    public int insertActors(Concerner conc) {
-//        int retour = 1;
-//        org.hibernate.Transaction tx = null;
-//        session = HibernateUtil.getSessionFactory().openSession();
-//         try {
-//            tx = session.beginTransaction();
-//            session.saveOrUpdate(conc);
-//            session.flush();
-//            tx.commit();
-//        } catch (HibernateException e) {
-//            tx.rollback();
-//            e.printStackTrace();
-//            return 0;
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return retour;
-//    }
 }

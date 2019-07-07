@@ -5,7 +5,7 @@
 <%@ page pageEncoding="UTF-8" %>
 <c:if test="${add}" > 
     <form:form action="add" modelAttribute="actorsForm" >
-        <p class="h4 text-center mb-4">Formulaire d'ajout d'un acteur</p>
+        <p class="h4 text-center mb-4"><spring:message code="actors.form.headline.add"></spring:message></p>
 
         <form:hidden path="id" />
         <spring:bind path="numCommercant" >
@@ -14,7 +14,7 @@
                 <i class="fas fa-barcode prefix grey-text"></i>
                 <!-- <input type="text" id="materialFormRegisterNameEx" class="form-control"> -->
                 <form:input path="numCommercant" class="form-control" />
-                <label for="numCommercant">Numéro de commerçant*</label>
+                <label for="numCommercant"><spring:message code="actors.tableHead.num_sell" />*</label>
                 <form:errors path="numCommercant" cssClass="error" />
             </div>
         </spring:bind>
@@ -25,10 +25,10 @@
         <spring:bind path="nom" >
         <div class="col">
             <!-- Material input -->
-            <div class="md-form mt-0">
+            <div class="md-form ${status.error ? 'has-error' : ''}">
                <i class="fa fa-user prefix grey-text"></i>
                 <form:input path="nom" class="form-control"/>
-                <label for="nom">Nom*</label>
+                <label for="nom"><spring:message code="actors.tableHead.name" />*</label>
                 <form:errors path="nom" cssClass="error" />
             </div>
         </div>
@@ -39,10 +39,10 @@
         <spring:bind path="prenom" >
         <div class="col">
             <!-- Material input -->
-            <div class="md-form mt-0">
+            <div class="md-form ${status.error ? 'has-error' : ''}">
                 <i class="fa fa-user prefix grey-text"></i>
                 <form:input path="prenom" class="form-control"/>
-                <label for="prenom">Prénom*</label>
+                <label for="prenom"><spring:message code="actors.tableHead.firstName" />*</label>
                 <form:errors path="prenom" cssClass="error" />
             </div>
         </div>
@@ -55,7 +55,7 @@
             <div class="md-form ${status.error ? 'has-error' : ''}">
                 <i class="fa fa-envelope prefix grey-text"></i>
                 <form:input path="email" class="form-control"/>
-                <label for="email">Adresse électronique*</label>
+                <label for="email"><spring:message code="actors.tableHead.email" />*</label>
                 <form:errors path="email" cssClass="error" />
             </div>
         </spring:bind>
@@ -64,7 +64,7 @@
             <div class="md-form ${status.error ? 'has-error' : ''}">
                 <i class="fas fa-mobile prefix grey-text"></i>
                 <form:input path="tel" class="form-control" length="10" />
-                <label for="tel" >Numéro de téléphone*</label>
+                <label for="tel" ><spring:message code="actors.tableHead.tel" />*</label>
                 <form:errors path="tel" cssClass="error" />
             </div>
         </spring:bind>
@@ -73,7 +73,7 @@
             <div class="md-form ${status.error ? 'has-error' : ''}">
                 <i class="fas fa-street-view prefix grey-text"></i>
                 <form:input path="numRue" class="form-control" length="10" mdbCharCounter="" />
-                <label for="numRue">Numéro de rue*</label>
+                <label for="numRue"><spring:message code="actors.tableHead.num_street" />*</label>
                 <form:errors path="numRue" cssClass="error" />
             </div>
         </spring:bind>
@@ -82,7 +82,7 @@
             <div class="md-form ${status.error ? 'has-error' : ''}">
                 <i class="fas fa-street-view prefix  grey-text"></i>
                 <form:input path="nomRue" class="form-control"/>
-                <label for="nomRue">Nom de rue*</label>
+                <label for="nomRue"><spring:message code="actors.tableHead.name_street" />*</label>
                 <form:errors path="nomRue" cssClass="error" />
             </div>
         </spring:bind>
@@ -91,7 +91,7 @@
             <div class="md-form ${status.error ? 'has-error' : ''}">
                 <i class="fas fa-street-view prefix  grey-text"></i>
                 <form:input path="cp" class="form-control" type="number"/>
-                <label for="cp">Code postal*</label>
+                <label for="cp"><spring:message code="actors.tableHead.cp" />*</label>
                 <form:errors path="cp" cssClass="error" />
             </div>
         </spring:bind>
@@ -100,7 +100,7 @@
             <div class="md-form ${status.error ? 'has-error' : ''}">
                 <i class="fas fa-street-view prefix  grey-text"></i>
                 <form:input path="ville" class="form-control"/>
-                <label for="ville">Ville*</label>
+                <label for="ville"><spring:message code="actors.tableHead.city" />*</label>
                 <form:errors path="ville" cssClass="error" />
             </div>
         </spring:bind>
@@ -109,20 +109,20 @@
             <div class="${status.error ? 'has-error' : ''} input-group" style="margin-top:1.5em;">
                 <i class="fas fa-user-plus prefix  grey-text"></i>
                 <div class="input-group-prepend">
-                    <label class="input-group-text" for="type">Type</label>
+                    <label class="input-group-text" for="type"><spring:message code="actors.tableHead.type" /></label>
                 </div>
                 <form:select path="type" items="${typeList}" class="custom-select" />
                 <form:errors path="type" cssClass="error" />
             </div>
         </spring:bind>
         <div class="text-center mt-4">
-            <button class="btn btn-primary" type="submit">Ajouter</button>
+            <button class="btn btn-primary" type="submit"><spring:message code="services.tableHead.actions.add" /></button>
         </div>
     </form:form>
 </c:if>
 <c:if test="${update}" > 
     <form:form action="update" modelAttribute="actorsForm" >
-        <p class="h4 text-center mb-4">Formulaire de mise à jour d'un acteur</p>
+        <p class="h4 text-center mb-4"><spring:message code="actors.form.headline.update" /></p>
 
         <form:hidden path="id" />
         <spring:bind path="numCommercant" >
@@ -131,7 +131,7 @@
                 <i class="fas fa-barcode prefix grey-text"></i>
                 <!-- <input type="text" id="materialFormRegisterNameEx" class="form-control"> -->
                 <form:input path="numCommercant" class="form-control" />
-                <label for="numCommercant">Numéro de commerçcant*</label>
+                <label for="numCommercant"><spring:message code="actors.tableHead.num_sell" />*</label>
                 <form:errors path="numCommercant" cssClass="error" />
             </div>
         </spring:bind>
@@ -142,10 +142,10 @@
         <spring:bind path="nom" >
         <div class="col">
             <!-- Material input -->
-            <div class="md-form mt-0">
+            <div class="md-form ${status.error ? 'has-error' : ''}">
                <i class="fa fa-user prefix grey-text"></i>
                 <form:input path="nom" class="form-control"/>
-                <label for="nom">Nom*</label>
+                <label for="nom"><spring:message code="actors.tableHead.name" />*</label>
                 <form:errors path="nom" cssClass="error" />
             </div>
         </div>
@@ -156,10 +156,10 @@
         <spring:bind path="prenom" >
         <div class="col">
             <!-- Material input -->
-            <div class="md-form mt-0">
+            <div class="md-form ${status.error ? 'has-error' : ''}">
                 <i class="fa fa-user prefix grey-text"></i>
                 <form:input path="prenom" class="form-control"/>
-                <label for="prenom">Prénom*</label>
+                <label for="prenom"><spring:message code="actors.tableHead.firstName" />*</label>
                 <form:errors path="prenom" cssClass="error" />
             </div>
         </div>
@@ -172,7 +172,7 @@
             <div class="md-form ${status.error ? 'has-error' : ''}">
                 <i class="fa fa-envelope prefix grey-text"></i>
                 <form:input path="email" class="form-control"/>
-                <label for="email">Adresse électronique*</label>
+                <label for="email"><spring:message code="actors.tableHead.email" />*</label>
                 <form:errors path="email" cssClass="error" />
             </div>
         </spring:bind>
@@ -181,7 +181,7 @@
             <div class="md-form ${status.error ? 'has-error' : ''}">
                 <i class="fas fa-mobile prefix grey-text"></i>
                 <form:input path="tel" class="form-control" length="10" />
-                <label for="tel" >Numéro de téléphone*</label>
+                <label for="tel" ><spring:message code="actors.tableHead.tel" />*</label>
                 <form:errors path="tel" cssClass="error" />
             </div>
         </spring:bind>
@@ -190,7 +190,7 @@
             <div class="md-form ${status.error ? 'has-error' : ''}">
                 <i class="fas fa-street-view prefix grey-text"></i>
                 <form:input path="numRue" class="form-control" length="10" mdbCharCounter="" />
-                <label for="numRue">Numéro de rue*</label>
+                <label for="numRue"><spring:message code="actors.tableHead.num_street" />*</label>
                 <form:errors path="numRue" cssClass="error" />
             </div>
         </spring:bind>
@@ -199,7 +199,7 @@
             <div class="md-form ${status.error ? 'has-error' : ''}">
                 <i class="fas fa-street-view prefix  grey-text"></i>
                 <form:input path="nomRue" class="form-control"/>
-                <label for="nomRue">Nom de rue*</label>
+                <label for="nomRue"><spring:message code="actors.tableHead.name_street" />*</label>
                 <form:errors path="nomRue" cssClass="error" />
             </div>
         </spring:bind>
@@ -208,7 +208,7 @@
             <div class="md-form ${status.error ? 'has-error' : ''}">
                 <i class="fas fa-street-view prefix  grey-text"></i>
                 <form:input path="cp" class="form-control" type="number"/>
-                <label for="cp">Code postal*</label>
+                <label for="cp"><spring:message code="actors.tableHead.cp" />*</label>
                 <form:errors path="cp" cssClass="error" />
             </div>
         </spring:bind>
@@ -217,7 +217,7 @@
             <div class="md-form ${status.error ? 'has-error' : ''}">
                 <i class="fas fa-street-view prefix  grey-text"></i>
                 <form:input path="ville" class="form-control"/>
-                <label for="ville">Nom de rue*</label>
+                <label for="ville"><spring:message code="actors.tableHead.city" />*</label>
                 <form:errors path="ville" cssClass="error" />
             </div>
         </spring:bind>
@@ -226,14 +226,14 @@
             <div class="${status.error ? 'has-error' : ''} input-group" style="margin-top:1.5em;">
                 <i class="fas fa-user-plus prefix  grey-text"></i>
                 <div class="input-group-prepend">
-                    <label class="input-group-text" for="type">Type</label>
+                    <label class="input-group-text" for="type"><spring:message code="actors.tableHead.type" /></label>
                 </div>
                 <form:select path="type" items="${typeList}" class="custom-select" />
                 <form:errors path="type" cssClass="error" />
             </div>
         </spring:bind>
         <div class="text-center mt-4">
-            <button class="btn btn-primary" type="submit">Mettre à jour</button>
+            <button class="btn btn-primary" type="submit"><spring:message code="services.tableHead.actions.update" /></button>
         </div>
     </form:form>
 </c:if>

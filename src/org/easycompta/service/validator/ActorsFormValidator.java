@@ -42,6 +42,9 @@ public class ActorsFormValidator implements Validator{
         if (actor.getNumRue().length() > 10) {
         	errors.rejectValue("numRue", "Correct.actorsForm.numRue");
         }
+        if (actor.getCp().length() > 5) {
+        	errors.rejectValue("cp", "Correct.actorsForm.cp");
+        }
         /*if (!actor.getMail().equals(actor.getMail_confirm())) {
             errors.rejectValue("mail_confirm", "Diff.registerForm.mail_confirm");
         }*/

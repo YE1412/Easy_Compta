@@ -8,9 +8,10 @@ package org.easycompta.controller.form;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.easycompta.domain.service.UserManager;
 import org.easycompta.object.Concerner;
@@ -18,6 +19,7 @@ import org.easycompta.object.Personne;
 import org.easycompta.service.dao.ActorsDAOManager;
 import org.easycompta.service.dao.InvoicesDAOManager;
 import org.easycompta.service.validator.ConcernedFormValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -41,9 +44,10 @@ public class ActorsInInvoiceFormController {
     Map<String, String> sellersListForSelect = new LinkedHashMap<>();
     Map<String, String> buyersListForSelect = new LinkedHashMap<>();
     private ResourceBundle messages, validate;
+    @Autowired
+    SessionLocaleResolver slr;
     private ActorsInInvoiceFormController() {
-    	messages = ResourceBundle.getBundle("messages", Locale.US);
-    	validate = ResourceBundle.getBundle("validate", Locale.getDefault());
+    	
     }
     //Set a form validator
     @InitBinder
@@ -91,8 +95,11 @@ public class ActorsInInvoiceFormController {
     }
     
     @RequestMapping(value = "/updateForm/{id}", method = RequestMethod.GET)
-    public String handleRequestForUpdateContainsForm(@PathVariable("id") int id,
+    public String handleRequestForUpdateContainsForm(HttpServletRequest req,
+    		@PathVariable("id") int id,
             Model model){
+    	messages = ResourceBundle.getBundle("messages", slr.resolveLocale(req));
+    	validate = ResourceBundle.getBundle("validate", slr.resolveLocale(req));
         String now = (new Date()).toString();
         /*Contains cont = new Contains();
         cont.setIdCommande(id);
@@ -121,10 +128,13 @@ public class ActorsInInvoiceFormController {
     }
     
     @RequestMapping(value = "/updateForm/update", method = RequestMethod.POST)
-    public String handleRequestForUpdateOrder(@ModelAttribute("concernedForm") @Validated Concerner conc, 
+    public String handleRequestForUpdateOrder(HttpServletRequest req,
+    		@ModelAttribute("concernedForm") @Validated Concerner conc, 
             BindingResult result,
             Model model,
             final RedirectAttributes redirectAttributes){
+    	messages = ResourceBundle.getBundle("messages", slr.resolveLocale(req));
+    	validate = ResourceBundle.getBundle("validate", slr.resolveLocale(req));
         if (result.hasErrors())
         {
             model.addAttribute("concernedForm", conc);

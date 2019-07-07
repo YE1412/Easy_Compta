@@ -13,7 +13,7 @@
           <li class="logo-wrapper waves-light">
               <div class="text-center">
                   <a href="<c:url value="/home" />" >
-                      <img src="https://mdbootstrap.com/img/logo/mdb-transparent.png" >
+                      <!-- <img src="https://mdbootstrap.com/img/logo/mdb-transparent.png" /> -->
                   </a>
               </div>
           </li>
@@ -32,7 +32,7 @@
               <ul class="collapsible collapsible-accordion">
                   <li>
                       <a class="collapsible-header waves-effect arrow-r" href="<c:url value="/services" />" />
-                          <i class="fab fa-servicestack"></i> Gestion des services
+                          <i class="fab fa-servicestack"></i> <spring:message code="sideNav.services" />
                           <i class="fa fa-angle-down rotate-icon"></i>
                       </a>
                       <div class="collapsible-body">
@@ -48,7 +48,7 @@
                   </li>
                   <li>
                       <a class="collapsible-header waves-effect arrow-r" href="<c:url value="/actors" />" />
-                          <i class="fa fa-users"></i> Gestion des acteurs
+                          <i class="fa fa-users"></i> <spring:message code="sideNav.actors" />
                           <i class="fa fa-angle-down rotate-icon"></i>
                       </a>
                       <div class="collapsible-body">
@@ -64,7 +64,7 @@
                   </li>
                   <li>
                       <a class="collapsible-header waves-effect arrow-r" href="<c:url value="/orders" />" />
-                          <i class="fab fa-linode"></i> Gestion des commandes
+                          <i class="fab fa-linode"></i> <spring:message code="sideNav.orders" />
                           <i class="fa fa-angle-down rotate-icon"></i>
                       </a>
                       <div class="collapsible-body">
@@ -80,7 +80,7 @@
                   </li>
                   <li>
                       <a class="collapsible-header waves-effect arrow-r" href="<c:url value="/payments" />" />
-                          <i class="fa fa-credit-card"></i> Gestion des paiements
+                          <i class="fa fa-credit-card"></i> <spring:message code="sideNav.payments" />
                           <i class="fa fa-angle-down rotate-icon"></i>
                       </a>
                       <div class="collapsible-body">
@@ -96,7 +96,7 @@
                   </li>
                   <li>
                       <a class="collapsible-header waves-effect arrow-r" href="<c:url value="/invoices" />" >
-                          <i class="fas fa-file-pdf"></i> Gestion des factures
+                          <i class="fas fa-file-pdf"></i> <spring:message code="sideNav.invoices" />
                           <i class="fa fa-angle-down rotate-icon"></i>
                       </a>
                       <div class="collapsible-body">
@@ -112,7 +112,7 @@
                   </li>
                   <li>
                       <a class="collapsible-header waves-effect arrow-r" href="<c:url value="/invoice_in_pdf" />" >
-                          <i class="fas fa-file-pdf"></i> Exportation
+                          <i class="fas fa-file-pdf"></i> <spring:message code="sideNav.export" />
                           <i class="fa fa-angle-down rotate-icon"></i>
                       </a>
                       <div class="collapsible-body">

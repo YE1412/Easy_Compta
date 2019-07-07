@@ -1,6 +1,0 @@
-<%-- any content can be specified here e.g.: --%>
-<%@ page pageEncoding="UTF-8" %>
-<link rel="stylesheet" href="<c:url value="/resources/fontawesome-free-5.0.10/web-fonts-with-css/css/fontawesome-all.css" />" />
-<link rel="stylesheet" href="<c:url value="/resources/mdb/css/bootstrap.min.css" />" />
-<link rel="stylesheet" href="<c:url value="/resources/mdb/css/mdb.min.css" />" />
-<link rel="stylesheet" href="<c:url value="/resources/mdb/css/style.css" />" />

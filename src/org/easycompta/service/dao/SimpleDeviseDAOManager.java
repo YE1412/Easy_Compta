@@ -11,48 +11,37 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import org.easycompta.object.Devise;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 /**
  *
  * @author Yannick
  */
 public class SimpleDeviseDAOManager extends AbstractDAOManager implements DeviseDAOManager {
-    public SimpleDeviseDAOManager() {
+    private Session session;
+	public SimpleDeviseDAOManager() {
         super();
     }
-
+	private Transaction getTx() {
+		session = AbstractDAOManager.getHibernateSession();
+		return session.beginTransaction();
+	}
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List<Devise> getAllDevise() {
 		// TODO Auto-generated method stub
 		List<Devise> devList = null;
-		EntityManager em = null;
+		Transaction tx = getTx();
 		try {
-			em = newEntityManager();
-			TypedQuery q = (TypedQuery) em.createNamedQuery("findAllDevises");
+			TypedQuery q = (TypedQuery) session.createNamedQuery("findAllDevises");
 			devList = q.getResultList();
 		} catch (Exception e) {
 			e.printStackTrace();
+			session.close();
 		} finally {
-			if (em != null)
-				closeEntityManager(em);
+			session.close();
 		}
 		return devList;
-	}
-    
-    
-//    @Override
-//    public List<Devise> getAllDevise() {
-//        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        List<Devise> deviseList = null;
-//        try {
-//            org.hibernate.Transaction tx = session.beginTransaction();
-//            Query q = session.createQuery ("from Devise as devise");
-//            deviseList = (List<Devise>) q.list();
-//        } catch (HibernateException e) {
-//            e.printStackTrace();
-//        }
-//        return deviseList;
-//    }
-    
+	}    
 }

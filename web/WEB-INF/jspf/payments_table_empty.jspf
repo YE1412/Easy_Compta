@@ -8,12 +8,11 @@
     <thead class="mdb-color darken-3">
         <tr class="text-white text-center">
             <th>#</th>
-            <th>Etat</th>
-            <th>Identifiant de la commande</th>
-            <th>Reste à payer</th>
-            <th>Prix total TT</th>
-            <th>Type</th>
-            <th>Actions</th>
+            <th><spring:message code="payments.tableHead.state" /></th>
+            <th><spring:message code="payments.tableHead.rest" /></th>
+            <th><spring:message code="payments.tableHead.orderId" /></th>
+            <th><spring:message code="invoices.tableHead.tt_price" /></th>
+            <th><spring:message code="services.tableHead.actions" /></th>
         </tr>
     </thead>
     <!--Table head-->
@@ -21,10 +20,10 @@
     <!--Table body-->
     <tbody>
         <tr>
-            <td class="text-center" colspan="6">Aucun paiement.</td>
+            <td class="text-center" colspan="5"><spring:message code="payments.table.empty" /></td>
             <td class="text-center">
                 <a href="<c:url value="/payments/addForm" />">
-                    <button type="button" class="btn btn-primary btn-rounded btn-sm my-0">Ajouter</button>
+                    <button type="button" class="btn btn-primary btn-rounded btn-sm my-0"><spring:message code="services.tableHead.actions.add" /></button>
                 </a>
             </td>
         </tr>

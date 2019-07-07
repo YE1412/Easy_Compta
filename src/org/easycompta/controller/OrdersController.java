@@ -11,12 +11,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.easycompta.domain.service.UserManager;
 import org.easycompta.object.Commande;
 import org.easycompta.object.Tva;
 import org.easycompta.service.dao.OrdersDAOManager;
 import org.easycompta.service.dao.ServicesDAOManager;
 import org.easycompta.service.validator.OrdersFormValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -41,10 +45,10 @@ public class OrdersController {
    Map<Integer, Tva> tvaListForDisplay = new LinkedHashMap<>();
    Map<Integer, List<Integer>> servicesListForDisplay = new LinkedHashMap<>();
    private ResourceBundle validate, messages;
+   @Autowired
+   SessionLocaleResolver slr;
     public void setServicesManager(ServicesDAOManager servicesManager) {
         this.servicesManager = servicesManager;
-    	validate = ResourceBundle.getBundle("validate");
-    	messages = ResourceBundle.getBundle("messages");
     }
    
     public void setOrdersFormValidator(OrdersFormValidator ordersFormValidator) {
@@ -104,7 +108,10 @@ public class OrdersController {
     }
     
     @RequestMapping(value="/addForm", method = RequestMethod.GET)
-    public String handleRequestForAddForm(Model model){
+    public String handleRequestForAddForm(HttpServletRequest req,
+    		Model model){
+    	validate = ResourceBundle.getBundle("validate", slr.resolveLocale(req));
+    	messages = ResourceBundle.getBundle("messages", slr.resolveLocale(req));
         String now = (new Date()).toString();
         model.addAttribute("now", now);
         model.addAttribute("orders_form", true);
@@ -117,10 +124,13 @@ public class OrdersController {
     }
     
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String handleRequestForAddOrder(@ModelAttribute("ordersForm") @Validated Commande com, 
+    public String handleRequestForAddOrder(HttpServletRequest req,
+    		@ModelAttribute("ordersForm") @Validated Commande com, 
             BindingResult result,
             Model model,
             final RedirectAttributes redirectAttributes){
+    	validate = ResourceBundle.getBundle("validate", slr.resolveLocale(req));
+    	messages = ResourceBundle.getBundle("messages", slr.resolveLocale(req));
         if (result.hasErrors())
         {
             model.addAttribute("orders_form", true);
@@ -203,9 +213,12 @@ public class OrdersController {
     }
     
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
-    public String handleRequestForDeleteService(@PathVariable("id") int id,
+    public String handleRequestForDeleteService(HttpServletRequest req,
+    		@PathVariable("id") int id,
             Model model,
             final RedirectAttributes redirectAttributes){
+    	validate = ResourceBundle.getBundle("validate", slr.resolveLocale(req));
+    	messages = ResourceBundle.getBundle("messages", slr.resolveLocale(req));
         if(ordersManager.deleteOrder(id) == 1)
         {
             redirectAttributes.addFlashAttribute("msg", validate.getString("Success.ordersForm.remove"));

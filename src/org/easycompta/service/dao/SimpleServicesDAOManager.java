@@ -18,6 +18,8 @@ import javax.persistence.criteria.Root;
 
 import org.easycompta.object.Comporter;
 import org.easycompta.object.ProduitService;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 
 
@@ -27,28 +29,30 @@ import org.easycompta.object.ProduitService;
  * @author Yannick
  */
 public class SimpleServicesDAOManager extends AbstractDAOManager implements ServicesDAOManager {
-//	Session session = null;
-//    EntityManagerFactory factory =  null;
+	private Session session;
     public SimpleServicesDAOManager() {
     	super();
     }
- 
+    private Transaction getTx() {
+		session = AbstractDAOManager.getHibernateSession();
+		return session.beginTransaction();
+	}
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
     public List<ProduitService> getAllServices() {
+    	Transaction tx = getTx();
 		List<ProduitService> servicesList = null;
-		EntityManager em = null;
-//    	initDbDatas();
+//    	initDbDatas(0);
     	try {
-			em = newEntityManager();
-		    TypedQuery q = (TypedQuery) em.createNamedQuery("findAllProduitServicesOrderAsc");
+//			em = newEntityManager();
+		    TypedQuery q = (TypedQuery) session.createNamedQuery("findAllProduitServicesOrderAsc");
 	        servicesList =  (List<ProduitService>) q.getResultList();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			session.close();
 		} finally {
-			if (em != null)
-				closeEntityManager(em);
+			session.close();
 		}
         return servicesList;
     }
@@ -56,41 +60,36 @@ public class SimpleServicesDAOManager extends AbstractDAOManager implements Serv
 	@Override
 	public int insertService(ProduitService service) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
-		   try {
-		      em = newEntityManager();
-		      // utilisation de l'EntityManager
-		      em.persist(service);
-		      em.getTransaction().commit();
+		Transaction tx = getTx();
+	   try {
+	      // utilisation de l'EntityManager
+	      session.persist(service);
+	      tx.commit();
 //		      System.err.println("addProduitService witdh id=" + service.getId());
-		   } catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	   } catch (Exception e) {
+		// TODO Auto-generated catch block
+		   	e.printStackTrace();
+		   	session.close();
 			return 0;
 		} finally {
-		      if (em != null) {
-		    	  closeEntityManager(em);
-		      }
-		   }
+			session.close();
+		}
 		return 1;
 	}
 
 	@Override
 	public ProduitService getServiceById(int id) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 		ProduitService p = null;
 	    try {
-	    	em = newEntityManager();
-	        // utilisation de l'EntityManager
-	        p = em.find(ProduitService.class, id);
+//	    	em = newEntityManager();
+	    	p = session.get(ProduitService.class, id);
 	    } catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-	      if (em != null) {
-	    	  closeEntityManager(em);
-	      }
+	      session.close();
 	    }
 		return p;
 	}
@@ -98,21 +97,19 @@ public class SimpleServicesDAOManager extends AbstractDAOManager implements Serv
 	@Override
 	public int deleteService(int id) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 	    ProduitService p = null;
 	    try {
-	    	em = newEntityManager();
 	        // utilisation de l'EntityManager
-	    	p = em.find(ProduitService.class, id);
-	    	em.remove(p);
-	    	em.getTransaction().commit();
+	    	p = session.get(ProduitService.class, id);
+	    	session.remove(p);
+	    	tx.commit();
 	    } catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			session.close();
 		} finally {
-	      if (em != null) {
-	    	  closeEntityManager(em);
-	      }
+	      session.close();
 	    }
 		return 1;
 	}
@@ -120,17 +117,16 @@ public class SimpleServicesDAOManager extends AbstractDAOManager implements Serv
 	@Override
 	public List<Integer> getOrdersId(int id) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 		List<Comporter> compList = new ArrayList<Comporter>();
 		List<Integer> idList = new ArrayList<Integer>();
 		try {
-			em = newEntityManager();
-			CriteriaBuilder cb = em.getCriteriaBuilder();
+			CriteriaBuilder cb = session.getCriteriaBuilder();
 			CriteriaQuery<Tuple> q = cb.createTupleQuery();
 			Root<Comporter> c = q.from(Comporter.class);
 			ParameterExpression<Integer> p = cb.parameter(Integer.class);
 		    q.select(cb.tuple(c.get("id"))).where(cb.equal(c.get("id").get("idProduitService"), p));
-			TypedQuery<Tuple> query = em.createQuery(q);
+			TypedQuery<Tuple> query = session.createQuery(q);
 			query.setParameter(p, id);
 			List<Tuple> results = query.getResultList();
 			for (Tuple t:results) {
@@ -141,10 +137,9 @@ public class SimpleServicesDAOManager extends AbstractDAOManager implements Serv
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
+			session.close();
 		}finally {
-		      if (em != null) {
-		    	  closeEntityManager(em);
-		      }
+		    session.close();
 		}
 		return idList;
 	}
@@ -152,23 +147,17 @@ public class SimpleServicesDAOManager extends AbstractDAOManager implements Serv
 	@Override
 	public int updateService(ProduitService service) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 		ProduitService c = null;
 		try {
-			em = newEntityManager();
-			c = em.find(ProduitService.class, service.getId());
-			c.setMontantHt(service.getMontantHt());
-			c.setNom(service.getNom());
-			c.setQuantite(service.getQuantite());
-			em.flush();
-			em.getTransaction().commit();
+			session.saveOrUpdate(service);
+			tx.commit();
 		} catch(Exception e) {
 			e.printStackTrace();
+			session.close();
 			return 0;
 		} finally {
-			if (em != null) {
-				closeEntityManager(em);
-			}
+			session.close();
 		}
 		return 1;
 	}

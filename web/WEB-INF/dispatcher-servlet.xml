@@ -44,6 +44,27 @@
           p:suffix=".jsp" >
         <property name="order" value="1" />
     </bean>
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" >
+    	<property name="defaultLocale" value="fr" />
+    </bean>
+	<mvc:interceptors>
+    <bean id="localChangeInterceptor"
+          class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+      <property name="paramName" value="language"/>
+    </bean>
+  </mvc:interceptors>
+	<!--<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" >
+		 <property name="interceptors">
+		   <list>
+			<ref bean="localeChangeInterceptor" />
+		    </list>
+		</property> 
+		<property name = "mappings">
+         <props>
+            <prop key = "/**/*">servicesController</prop>
+         </props>
+      </property>
+	</bean>-->
 	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
         <property name="basenames">
             <list>
@@ -56,13 +77,7 @@
         </list>
         </property>
     </bean> 
-    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" >
-    </bean>
-    <bean id="localeChangeInterceptor"
-      class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-    	<property name="paramName" value="language"/>
-	</bean>
-	<bean id="urlMapping"
+    <!-- <bean id="urlMapping"
       class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 	    <property name="interceptors">
 	        <list>
@@ -70,9 +85,12 @@
 	        </list>
 	    </property>
 	    <property name="mappings">
-	        <value>/**/*=/invoices.htm</value>
+	        <value>
+	        	/*=/invoices.htm
+	        	/*=servicesController
+	        </value>
 	    </property>
-	</bean>
+	</bean> -->
     <!--
     The index controller.
     -->
@@ -175,7 +193,7 @@
         <property name="userManager" ref="userManager"/>
     </bean>
     
-    <bean name="/services.htm" class="org.easycompta.controller.ServicesController"> 
+    <bean name="servicesController" class="org.easycompta.controller.ServicesController"> 
         <property name="userManager" ref="userManager"/>
         <property name="servicesManager" ref="servicesManager"/>
         <property name="servicesFormValidator" ref="servicesFormValidator"/>    

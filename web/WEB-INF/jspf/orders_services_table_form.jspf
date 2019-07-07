@@ -10,9 +10,9 @@
                 <!--Table head-->
                 <thead class="mdb-color darken-3">
                     <tr class="text-white text-center">
-                        <th>Identifiant de la commande</th>
-                        <th>Identifiant des services</th>
-                        <th>Actions</th>
+                        <th><spring:message code="orders_services.tableHead.idOrder" /></th>
+                        <th><spring:message code="orders_services.tableHead.idServ" /></th>
+                        <th><spring:message code="services.tableHead.actions" /></th>
                     </tr>
                 </thead>
                 <!--Table head-->
@@ -26,7 +26,7 @@
                     <div class="${status.error ? 'has-error' : ''} input-group" style="margin-top:1.5em;">
                         <i class="fab fa-servicestack prefix  grey-text"></i>
                         <div class="input-group-prepend">
-                            <label class="input-group-text" for="type">Services</label>
+                            <label class="input-group-text" for="type"><spring:message code="orders_services.form.services" /></label>
                         </div>
                         <form:select multiple="true" path="id.idProduitService" items="${servicesList}" class="custom-select" />
                         <form:errors path="id.idProduitService" cssClass="error" />
@@ -34,7 +34,7 @@
                     </td>
                     </spring:bind>
                 <td style="vertical-align:middle;" class="text-center">
-                    <button class="btn btn-primary" type="submit">Ajouter</button>
+                    <button class="btn btn-primary" type="submit"><spring:message code="services.tableHead.actions.add" /></button>
                 </td>
                 </tr>
                 </tbody>
@@ -52,9 +52,9 @@
                 <!--Table head-->
                 <thead class="mdb-color darken-3">
                     <tr class="text-white text-center">
-                        <th>Identifiant de la commande</th>
-                        <th>Identifiant des services</th>
-                        <th>Actions</th>
+                        <th><spring:message code="orders_services.tableHead.idOrder" /></th>
+                        <th><spring:message code="orders_services.tableHead.idServ" /></th>
+                        <th><spring:message code="services.tableHead.actions" /></th>
                     </tr>
                 </thead>
                 <!--Table head-->
@@ -68,7 +68,7 @@
                     <div class="${status.error ? 'has-error' : ''} input-group" style="margin-top:1.5em;">
                         <i class="fab fa-servicestack prefix  grey-text"></i>
                         <div class="input-group-prepend">
-                            <label class="input-group-text" for="type">Services</label>
+                            <label class="input-group-text" for="type"><spring:message code="orders_services.form.services" /></label>
                         </div>
                         <form:select  path="comporte" items="${servicesList}" class="custom-select" multiple="true"/>
                         <form:errors path="comporte" cssClass="error" />
@@ -76,7 +76,7 @@
                     </td>
                     </spring:bind>
                 <td style="vertical-align:middle;" class="text-center">
-                    <button class="btn btn-primary" type="submit">Mettre à jour</button>
+                    <button class="btn btn-primary" type="submit"><spring:message code="services.tableHead.actions.update" /></button>
                 </td>
                 </tr>
                 </tbody>

@@ -28,7 +28,7 @@
                         <div class="${status.error ? 'has-error' : ''} input-group" style="margin-top:1.5em;">
                             <i class="fas fa-language prefix  grey-text"></i>
                             <div class="input-group-prepend">
-                                <label class="input-group-text" for="type"><spring:message code="invoices.form.language" /></label>
+                                <label class="input-group-text" for="type"><spring:message code="invoices.tableHead.language" />*</label>
                             </div>
                             <form:select path="idLangue" items="${languagesList}" class="custom-select" />
                             <form:errors path="idLangue" cssClass="error" />
@@ -40,7 +40,7 @@
                         <div class="${status.error ? 'has-error' : ''} input-group" style="margin-top:1.5em;">
                             <i class="fab fa-linode prefix  grey-text"></i>
                             <div class="input-group-prepend">
-                                <label class="input-group-text" for="type"><spring:message code="invoices.form.order" /></label>
+                                <label class="input-group-text" for="type"><spring:message code="invoices.form.order" />*</label>
                             </div>
                             <form:select path="idCommande" items="${ordersList}" class="custom-select" />
                             <form:errors path="idCommande" cssClass="error" />
@@ -68,11 +68,10 @@
                 <thead class="mdb-color darken-3">
                     <tr class="text-white text-center">
                         <th>#</th>
-                        <th>Langue</th>
-                        <th>Date</th>
-                        <th>Identifiant de la commande</th>
-                        <!--<th>Prix total TT</th>-->
-                        <th>Actions</th>
+                        <th><spring:message code="invoices.tableHead.language" /></th>
+                        <th><spring:message code="invoices.tableHead.date" /></th>
+                        <th><spring:message code="invoices.tableHead.orderId" /></th>
+                        <th><spring:message code="services.tableHead.actions" /></th>
                     </tr>
                 </thead>
                 <!--Table head-->
@@ -87,7 +86,7 @@
                         <div class="${status.error ? 'has-error' : ''} input-group" style="margin-top:1.5em;">
                             <i class="fas fa-language prefix  grey-text"></i>
                             <div class="input-group-prepend">
-                                <label class="input-group-text" for="type">Langue</label>
+                                <label class="input-group-text" for="type"><spring:message code="invoices.tableHead.language" />*</label>
                             </div>
                             <form:select path="idLangue" items="${languagesList}" class="custom-select" />
                             <form:errors path="idLangue" cssClass="error" />
@@ -99,7 +98,7 @@
                         <div class="${status.error ? 'has-error' : ''} input-group" style="margin-top:1.5em;">
                             <i class="fas fa-calendar-alt prefix  grey-text"></i>
                             <div class="input-group-prepend">
-                                <label class="input-group-text" for="type">Date</label>
+                                <label class="input-group-text" for="type"><spring:message code="invoices.tableHead.date" />*</label>
                             </div>
                             <form:input path="date"  class="custom-select" type="date" />
                             <form:errors path="date" cssClass="error" />
@@ -111,7 +110,7 @@
                         <div class="${status.error ? 'has-error' : ''} input-group" style="margin-top:1.5em;">
                             <i class="fab fa-linode prefix  grey-text"></i>
                             <div class="input-group-prepend">
-                                <label class="input-group-text" for="type">Commande</label>
+                                <label class="input-group-text" for="type"><spring:message code="invoices.form.order" />*</label>
                             </div>
                             <form:select path="idCommande" items="${ordersList}"  class="form-control md-text" />
                             <form:errors path="idCommande" cssClass="error" />
@@ -119,7 +118,7 @@
                     </td>
                 </spring:bind>
                 <td style="vertical-align:middle;">
-                    <button class="btn btn-primary" type="submit">Modifier</button>
+                    <button class="btn btn-primary" type="submit"><spring:message code="services.tableHead.actions.update" /></button>
                 </td>
                 </tr>
                 </tbody>

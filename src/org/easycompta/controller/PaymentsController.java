@@ -11,12 +11,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.easycompta.domain.service.UserManager;
 import org.easycompta.object.Commande;
 import org.easycompta.object.Paiement;
 import org.easycompta.service.dao.OrdersDAOManager;
 import org.easycompta.service.dao.PaymentsDAOManager;
 import org.easycompta.service.validator.PaymentsFormValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -41,9 +45,10 @@ public class PaymentsController {
     Map<String, String> stateListForSelect = new LinkedHashMap<>();
     Map<Integer, Float> priceTtListForDisplay = new LinkedHashMap<>();
     private ResourceBundle messages, validate;
+    @Autowired
+    SessionLocaleResolver slr;
     public PaymentsController() {
-    	messages = ResourceBundle.getBundle("messages");
-    	validate = ResourceBundle.getBundle("validate");
+    	
     }
     public void setTtListForDisplay() {
         List<Commande> orderList = ordersManager.getAllOrders();
@@ -88,7 +93,10 @@ public class PaymentsController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String handleRequestForDisplay(Model model){
+    public String handleRequestForDisplay(HttpServletRequest req,
+    		Model model){
+    	messages = ResourceBundle.getBundle("messages", slr.resolveLocale(req));
+    	validate = ResourceBundle.getBundle("validate", slr.resolveLocale(req));
         String now = (new Date()).toString();
         model.addAttribute("now", now);
         model.addAttribute("payments", paymentsManager.getAllPayments());
@@ -101,7 +109,10 @@ public class PaymentsController {
     }
     
     @RequestMapping(value = "/addForm", method = RequestMethod.GET)
-    public String handleRequestForAddForm(Model model){
+    public String handleRequestForAddForm(HttpServletRequest req,
+    		Model model){
+    	messages = ResourceBundle.getBundle("messages", slr.resolveLocale(req));
+    	validate = ResourceBundle.getBundle("validate", slr.resolveLocale(req));
         String now = (new Date()).toString();
         model.addAttribute("now", now);
         model.addAttribute("payments_form", true);
@@ -114,11 +125,14 @@ public class PaymentsController {
     }
     
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String handleRequestForAddOrder(@ModelAttribute("paymentsForm") @Validated Paiement pay, 
+    public String handleRequestForAddOrder(HttpServletRequest req,
+    		@ModelAttribute("paymentsForm") @Validated Paiement pay, 
             BindingResult result,
             Model model,
             final RedirectAttributes redirectAttributes){
-        if (result.hasErrors())
+    	messages = ResourceBundle.getBundle("messages", slr.resolveLocale(req));
+    	validate = ResourceBundle.getBundle("validate", slr.resolveLocale(req));
+    	if (result.hasErrors())
         {
             model.addAttribute("payments_form", true);
             model.addAttribute("paymentsForm", pay);
@@ -160,10 +174,13 @@ public class PaymentsController {
     }
     
     @RequestMapping(value = "/updateForm/update", method = RequestMethod.POST)
-    public String handleRequestForUpdateOrder(@ModelAttribute("paymentsForm") @Validated Paiement pay, 
+    public String handleRequestForUpdateOrder(HttpServletRequest req,
+    		@ModelAttribute("paymentsForm") @Validated Paiement pay, 
             BindingResult result,
             Model model,
             final RedirectAttributes redirectAttributes){
+    	messages = ResourceBundle.getBundle("messages", slr.resolveLocale(req));
+    	validate = ResourceBundle.getBundle("validate", slr.resolveLocale(req));
         if (result.hasErrors())
         {
             model.addAttribute("payments_form", true);
@@ -188,9 +205,12 @@ public class PaymentsController {
     }
     
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
-    public String handleRequestForDeleteService(@PathVariable("id") int id,
+    public String handleRequestForDeleteService(HttpServletRequest req,
+    		@PathVariable("id") int id,
             Model model,
             final RedirectAttributes redirectAttributes){
+    	messages = ResourceBundle.getBundle("messages", slr.resolveLocale(req));
+    	validate = ResourceBundle.getBundle("validate", slr.resolveLocale(req));
         if(paymentsManager.deletePayment(id) == 1)
         {
             redirectAttributes.addFlashAttribute("msg", validate.getString("Success.paymentsForm.remove"));

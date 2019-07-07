@@ -8,13 +8,13 @@
     <thead class="mdb-color darken-3">
         <tr class="text-white text-center">
             <th>#</th>
-            <th>Langue</th>
-            <th>Date</th>
-            <th>Identifiant de la commande</th>
-            <th>Prix total TT</th>
-            <th>Vendeur</th>
-            <th>Client</th>
-            <th>Actions</th>
+            <th><spring:message code="invoices.tableHead.language" /></th>
+            <th><spring:message code="invoices.tableHead.date" /></th>
+            <th><spring:message code="invoices.tableHead.orderId" /></th>
+            <th><spring:message code="invoices.tableHead.tt_price" /></th>
+            <th><spring:message code="invoices.tableHead.seller" /></th>
+            <th><spring:message code="invoices.tableHead.buyer" /></th>
+            <th><spring:message code="services.tableHead.actions" /></th>
         </tr>
     </thead>
     <!--Table head-->
@@ -42,7 +42,7 @@
                     <c:if test="${ordersList.get(invoice.getId()) > 0}" >
                     <div class="btn-group" role="group" aria-label="Basic example">
                     <a href="<c:url value="/invoice_in_pdf/${invoice.getId()}/Facture_${invoice.getId()}_${now_for_file}.pdf" />">
-                        <button type="button" class="btn btn-primary btn-rounded btn-sm my-0">Exporter en PDF</button>
+                        <button type="button" class="btn btn-primary btn-rounded btn-sm my-0"><spring:message code="invoices_pdf.form.actions.exportPdf" /></button>
                     </a>
                     </div>
                     </c:if>

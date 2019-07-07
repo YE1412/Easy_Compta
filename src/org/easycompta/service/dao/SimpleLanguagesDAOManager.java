@@ -11,31 +11,36 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import org.easycompta.object.Langue;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 /**
  *
  * @author Yannick
  */
 public class SimpleLanguagesDAOManager extends AbstractDAOManager implements LanguagesDAOManager{
-    public SimpleLanguagesDAOManager() {
+    private Session session;
+	public SimpleLanguagesDAOManager() {
         super();
     }
-
+	private Transaction getTx() {
+		session = AbstractDAOManager.getHibernateSession();
+		return session.beginTransaction();
+	}
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List<Langue> getAllLanguages() {
 		// TODO Auto-generated method stub
 		List<Langue> langList = null;
-		EntityManager em = null;
+		Transaction tx = getTx();
 		try {
-			em = newEntityManager();
-			TypedQuery q = (TypedQuery) em.createNamedQuery("findAllLanguagesOrderAsc");
+			TypedQuery q = (TypedQuery) session.createNamedQuery("findAllLanguagesOrderAsc");
 			langList = q.getResultList();
 		} catch (Exception e) {
 			e.printStackTrace();
+			session.close();
 		} finally {
-			if (em != null)
-				closeEntityManager(em);
+			session.close();
 		}
 		return langList;
 	}
@@ -43,17 +48,16 @@ public class SimpleLanguagesDAOManager extends AbstractDAOManager implements Lan
 	@Override
 	public int insertLanguage(Langue fac) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 		try {
-			em = newEntityManager();
-			em.persist(fac);
-			em.getTransaction().commit();
+			session.persist(fac);
+			tx.commit();
 		} catch(Exception e) {
 			e.printStackTrace();
+			session.close();
 			return 0;
 		} finally {
-			if (em != null)
-				closeEntityManager(em);
+			session.close();
 		}
 		return 1;
 	}
@@ -61,16 +65,15 @@ public class SimpleLanguagesDAOManager extends AbstractDAOManager implements Lan
 	@Override
 	public Langue getLanguageById(int id) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 		Langue l = null;
 		try {
-			em = newEntityManager();
-			l = em.find(Langue.class, id);
+			l = session.get(Langue.class, id);
 		} catch(Exception e) {
 			e.printStackTrace();
+			session.close();
 		} finally {
-			if (em != null)
-				closeEntityManager(em);
+			session.close();
 		}
 		return l;
 	}
@@ -78,19 +81,18 @@ public class SimpleLanguagesDAOManager extends AbstractDAOManager implements Lan
 	@Override
 	public int deleteLanguage(int id) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 		Langue l = null;
 		try {
-			em = newEntityManager();
-			l = em.find(Langue.class, id);
-			em.remove(l);
-			em.getTransaction().commit();
+			l = session.get(Langue.class, id);
+			session.remove(l);
+			tx.commit();
 		} catch(Exception e) {
 			e.printStackTrace();
+			session.close();
 			return 0;
 		} finally {
-			if (em != null)
-				closeEntityManager(em);
+			session.close();
 		}
 		return 1;
 	}
@@ -98,104 +100,18 @@ public class SimpleLanguagesDAOManager extends AbstractDAOManager implements Lan
 	@Override
 	public int updateLanguage(Langue lan) {
 		// TODO Auto-generated method stub
-		EntityManager em = null;
+		Transaction tx = getTx();
 		Langue a = null;
 		try {
-			em = newEntityManager();
-			a = em.find(Langue.class, lan.getId());
-			a.setIdDevise(lan.getIdDevise());
-			a.setLibelle(lan.getLibelle());
-			a.setNom(lan.getNom());
-			em.flush();
-			em.getTransaction().commit();
+			session.saveOrUpdate(lan);
+			tx.commit();
 		} catch(Exception e) {
 			e.printStackTrace();
+			session.close();
 			return 0;
 		} finally {
-			if (em != null) {
-				closeEntityManager(em);
-			}
+			session.close();
 		}
 		return 1;
 	}
-    
-//    @Override
-//    public List<Langue> getAllLanguages() {
-//        List<Langue> languagesList = null;
-//        org.hibernate.Transaction tx = null;
-//        session = HibernateUtil.getSessionFactory().openSession();
-//        try{
-//           tx = session.beginTransaction();
-//           Query q = session.createQuery ("from Langue");
-//           languagesList = (List<Langue>) q.list();
-//        }
-//        catch(HibernateException e){
-//            e.printStackTrace();
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return languagesList;
-//    }
-//
-//    @Override
-//    public int insertLanguage(Langue fac) {
-//        org.hibernate.Transaction tx = null;
-//        session = HibernateUtil.getSessionFactory().openSession();
-//         try {
-//            tx = session.beginTransaction();
-//            session.saveOrUpdate(fac);
-//            session.flush();
-//            tx.commit();
-//        } catch (HibernateException e) {
-//            tx.rollback();
-//            e.printStackTrace();
-//            return 0;
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return 1;
-//    }
-//
-//    @Override
-//    public Langue getLanguageById(int id) {
-//        List<Langue> languagesList = null;
-//        Langue language = null;
-//        session = HibernateUtil.getSessionFactory().openSession();
-//        try {
-//            org.hibernate.Transaction tx = session.beginTransaction();
-//            Query q = session.createQuery ("from Langue where id = ?");
-//            q.setParameter(0, id);
-//            languagesList = (List<Langue>)q.list();
-//            language = languagesList.get(0);
-//        } catch (HibernateException e) {
-//            e.printStackTrace();
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return language;
-//    }
-//
-//    @Override
-//    public int deleteLanguage(int id) {
-//        int retour = 0;
-//        session = HibernateUtil.getSessionFactory().openSession();
-//        org.hibernate.Transaction tx = null;
-//        try {
-//            tx = session.beginTransaction();
-//            Query q = session.createQuery ("DELETE Langue where id = ?");
-//            q.setParameter(0, id);
-//            retour = q.executeUpdate();
-//            tx.commit();
-//        } catch (HibernateException e) {
-//            tx.rollback();
-//            e.printStackTrace();
-//        }
-//        finally{
-//            session.close();
-//        }
-//        return retour;
-//    }
 }
