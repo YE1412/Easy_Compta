@@ -50,7 +50,7 @@ Contributor(s):
     <!-- <property name="hibernate.hbm2ddl.import_files_sql_extractor">org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor</property> -->
     <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
     <property name="hibernate.connection.username">root</property>
-    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/easy_compta?serverTimezone=UTC</property>
+    <property name="hibernate.connection.url">jdbc:mysql://172.17.0.2:3306/easy_compta?serverTimezone=UTC</property>
     <mapping resource="org/easycompta/object/Personne.hbm.xml"/>
     <mapping resource="org/easycompta/object/ProduitService.hbm.xml"/>
     <mapping resource="org/easycompta/object/Commande.hbm.xml"/>
