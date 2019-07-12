@@ -45,9 +45,9 @@ public class ActorsFormValidator implements Validator{
         if (actor.getCp().length() > 5) {
         	errors.rejectValue("cp", "Correct.actorsForm.cp");
         }
-        /*if (!actor.getMail().equals(actor.getMail_confirm())) {
-            errors.rejectValue("mail_confirm", "Diff.registerForm.mail_confirm");
-        }*/
+        if (actor.getType() == -1) {
+            errors.rejectValue("type", "NotEmpty.actorsForm.type");
+        }
     }
     
 }

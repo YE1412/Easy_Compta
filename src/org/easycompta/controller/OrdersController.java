@@ -59,7 +59,7 @@ public class OrdersController {
         List<Tva> tvaList = ordersManager.getAllTva();
         tvaListForSelect.put("-1", messages.getString("actors.select.option1"));
         tvaList.forEach((item) -> {
-            tvaListForSelect.put(item.getId().toString(), item.getLibelle()+ " " + item.getPourcentage());
+            tvaListForSelect.put(item.getId().toString(), item.getLibelle()+ " - " + item.getPourcentage());
        });
     }
     
